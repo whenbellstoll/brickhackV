@@ -30,6 +30,11 @@ public class SceneManager : MonoBehaviour {
 
     private float timer;
 
+    [SerializeField] public int playerHealth;
+
+    [HideInInspector] public int playerOneHealth = 0;
+    [HideInInspector] public int playerTwoHealth = 0;
+
     private GameState state = GameState.building;
 
     [SerializeField] GameObject cursorPrefab;
@@ -43,7 +48,6 @@ public class SceneManager : MonoBehaviour {
 
     private void Awake()
     {
-
         ResetGame();
     }
 
@@ -57,6 +61,9 @@ public class SceneManager : MonoBehaviour {
         state = GameState.picking;
         BeginPickingPhase();
         SetPlayers(state); //players start on their own side
+
+        playerOneHealth = playerHealth;
+        playerTwoHealth = playerHealth;
     }
 
 	void Update () {
