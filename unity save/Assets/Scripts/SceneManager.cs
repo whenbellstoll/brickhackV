@@ -27,8 +27,11 @@ public class SceneManager : MonoBehaviour {
 
     private float timer;
 
-    private int playerOneScore;
-    private int playerTwoScore;
+
+    [SerializeField] private int playerHealth;
+    [SerializeField] private int heartPrefab;
+    private int playerOneHealth;
+    private int playerTwoHealth;
 
     private GameState state = GameState.building;
 
@@ -43,14 +46,16 @@ public class SceneManager : MonoBehaviour {
     public void ResetGame()
     {
         timer = roundTime;
-        playerOneScore = 0;
-        playerTwoScore = 0;
+        playerOneHealth = playerHealth;
+        playerTwoHealth = playerHealth;
 
         state = GameState.building;
         SetPlayers(state); //players start on their own side
     }
 
 	void Update () {
+
+        //heartTest.GetComponent<Animator>().SetBool("Solid", false);
 
         switch(state){
             case GameState.building:
