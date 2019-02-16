@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Platform : MonoBehaviour {
 
+    //used to detect collision between cursor and platform
+    GameObject cursor;
+
+    //is in placement mode, object overrides cursor control
     public bool inPlacementMode;
     public float speed = 0.1f;
 
@@ -13,12 +17,14 @@ public class Platform : MonoBehaviour {
 	void Start () {
         inPlacementMode = false;
         position = transform.position;
+
+        cursor = GameObject.Find("Cursor");
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-        if (Input.GetKeyDown(KeyCode.P))
+        if (TestForClicked())
         {
             inPlacementMode = !inPlacementMode;
         }
@@ -55,5 +61,15 @@ public class Platform : MonoBehaviour {
         {
             position.x += speed;
         }
+    }
+
+    bool TestForClicked()
+    {
+        //tests collision between platform and cursor
+        if (gameObject.GetComponent<BoxCollider2D>().bounds.Intersects(cursor.GetComponent<BoxCollider2D>().bounds))
+        {
+            Debug.Log("collision detected");
+        }
+        return false;
     }
 }
