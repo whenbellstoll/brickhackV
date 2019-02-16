@@ -7,16 +7,14 @@ public class Platform : MonoBehaviour {
     //used to detect collision between cursor and platform
     GameObject cursor;
 
-    //is in placement mode, object overrides cursor control
-    public bool inPlacementMode;
     public float speed = 0.1f;
 
     Vector3 position;
 
 	// Use this for initialization
 	void Start () {
-        inPlacementMode = false;
         position = transform.position;
+        gameObject.GetComponent<ControlWithJoystick>().enabled = false;
 
         cursor = GameObject.Find("Cursor");
 	}
@@ -24,50 +22,21 @@ public class Platform : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (TestForClicked())
-        {
-            inPlacementMode = !inPlacementMode;
-        }
-
-        if (inPlacementMode)
-        {
-            MovePlatform();
-        }
+        TestForClicked();
 
         transform.position = position;
 	}
-
-    void MovePlatform()
-    {
-        float x = Input.GetAxis("Horizontal");
-        float y = Input.GetAxis("Vertical");
-
-        if (Input.GetKey(KeyCode.W) || y > 0)
-        {
-            position.y += speed;
-        }
-
-        if (Input.GetKey(KeyCode.A) || x < 0)
-        {
-            position.x -= speed;
-        }
-
-        if (Input.GetKey(KeyCode.S) || y < 0)
-        {
-            position.y -= speed;
-        }
-
-        if (Input.GetKey(KeyCode.D) || x > 0)
-        {
-            position.x += speed;
-        }
-    }
 
     bool TestForClicked()
     {
         //tests collision between platform and cursor
         if (gameObject.GetComponent<BoxCollider2D>().bounds.Intersects(cursor.GetComponent<BoxCollider2D>().bounds))
         {
+            if (Input.GetKeyDown("joystick button 0"))
+            {
+                gameObject.GetComponent<ControlWithJoystick>().enabled = !gameObject.GetComponent<ControlWithJoystick>().enabled;
+                position = transform.position;
+            }
             Debug.Log("collision detected");
         }
         return false;
