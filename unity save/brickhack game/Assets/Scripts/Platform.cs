@@ -17,6 +17,7 @@ public class Platform : MonoBehaviour {
         gameObject.GetComponent<ControlWithJoystick>().enabled = false;
 
         cursor = GameObject.Find("Cursor");
+        Debug.Log(cursor.GetComponent<BoxCollider2D>().bounds);
 	}
 	
 	// Update is called once per frame
@@ -29,6 +30,7 @@ public class Platform : MonoBehaviour {
 
     bool TestForClicked()
     {
+        Debug.Log("we got here");
         //tests collision between platform and cursor
         if (gameObject.GetComponent<BoxCollider2D>().bounds.Intersects(cursor.GetComponent<BoxCollider2D>().bounds))
         {
