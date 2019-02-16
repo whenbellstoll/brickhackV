@@ -36,8 +36,7 @@ public class Platform : MonoBehaviour {
         {
             if (Input.GetKeyDown("joystick button 0"))
             {
-                gameObject.GetComponent<ControlWithJoystick>().enabled = !gameObject.GetComponent<ControlWithJoystick>().enabled;
-                position = transform.position;
+                cursor.GetComponent<StoreObjectToBuild>().obj = gameObject;
             }
             Debug.Log("collision detected");
         }

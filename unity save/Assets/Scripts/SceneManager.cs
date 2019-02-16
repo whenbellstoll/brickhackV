@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum GameState
 {
+    picking,
     building,
     survival
 }
@@ -21,6 +22,8 @@ public class SceneManager : MonoBehaviour {
     [SerializeField] private Vector2 startPositionOne;
     [SerializeField] private Vector2 startPositionTwo;
 
+    [SerializeField] private float pickTime;
+    [SerializeField] private float buildTime;
     [SerializeField] private float roundTime;
 
     [SerializeField] private Digit[] timerDigits;
@@ -29,9 +32,14 @@ public class SceneManager : MonoBehaviour {
 
     private GameState state = GameState.building;
 
+    [SerializeField] GameObject cursorPrefab;
+    GameObject p1Cursor;
+    GameObject p2Cursor;
+
     [SerializeField] List<GameObject> platformPrefabs;
     List<GameObject> platforms = new List<GameObject>();
     List<GameObject> newPlatforms = new List<GameObject>();
+    bool buildingComplete = false;
 
     private void Awake()
     {
@@ -46,7 +54,8 @@ public class SceneManager : MonoBehaviour {
     {
         timer = roundTime;
 
-        state = GameState.building;
+        state = GameState.picking;
+        BeginPickingPhase();
         SetPlayers(state); //players start on their own side
     }
 
@@ -55,6 +64,15 @@ public class SceneManager : MonoBehaviour {
         //heartTest.GetComponent<Animator>().SetBool("Solid", false);
 
         switch(state){
+            case GameState.picking:
+                timer -= Time.deltaTime;
+                if(timer <= 0)
+                {
+                    timer = buildTime;
+                    state = GameState.building;
+                    BeginBuildPhase();
+                }
+                break;
             case GameState.building:
 
                 foreach (Digit digit in timerDigits)
@@ -62,7 +80,16 @@ public class SceneManager : MonoBehaviour {
                     digit.SetSprite(0);
                 }
 
-                if (Input.GetKeyDown(KeyCode.A)) {
+                //this will all be changed when we start differentaiting between controllers
+                if (Input.GetKeyDown("joystick button 0"))
+                {
+                    p1Cursor.GetComponent<StoreObjectToBuild>().obj.GetComponent<ControlWithJoystick>().enabled = false;
+                    platforms.Add(p1Cursor.GetComponent<StoreObjectToBuild>().obj);
+                    p1Cursor.GetComponent<StoreObjectToBuild>().obj = null;
+                }
+
+                if (buildTime <= 0) {
+                    timer = roundTime;
 
                     state = GameState.survival;
                     SetPlayers(state); //place players on opponents side   
@@ -79,14 +106,16 @@ public class SceneManager : MonoBehaviour {
 
                 if (timer <= 0)
                 {
-                    timer = roundTime; //reset the timer
+                    timer = pickTime; //reset the timer
 
-                    state = GameState.building;
+                    state = GameState.picking;
+                    BeginPickingPhase();
                     SetPlayers(state); //return players to own side
                 }                
 
                 break;
         }
+        Debug.Log(state);
 	}
 
     /// <summary>
@@ -110,4 +139,24 @@ public class SceneManager : MonoBehaviour {
            
     }
 
+    private void BeginPickingPhase()
+    {
+        p1Cursor = Instantiate(cursorPrefab);
+        p2Cursor = Instantiate(cursorPrefab);
+
+        float xPos = -5f;
+        for(int i = 0; i < 2; i++)
+        {
+            
+        }
+    }
+
+    private void BeginBuildPhase()
+    {
+        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[Random.Range(0, platformPrefabs.Count)]);
+        p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[Random.Range(0, platformPrefabs.Count)]);
+
+        p1Cursor.GetComponent<StoreObjectToBuild>().obj.GetComponent<ControlWithJoystick>().enabled = true;
+        p2Cursor.GetComponent<StoreObjectToBuild>().obj.GetComponent<ControlWithJoystick>().enabled = true;
+    }
 }
