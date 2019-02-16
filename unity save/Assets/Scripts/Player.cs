@@ -141,6 +141,7 @@ public class Player : MonoBehaviour
         else
         {
            falling = false;
+            //animation
             velocity.y = 0;
         }
 
