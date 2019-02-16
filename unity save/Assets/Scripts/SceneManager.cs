@@ -34,6 +34,10 @@ public class SceneManager : MonoBehaviour {
 
     private GameState state = GameState.building;
 
+    [SerializeField] List<GameObject> platformPrefabs;
+    List<GameObject> platforms = new List<GameObject>();
+    List<GameObject> newPlatforms = new List<GameObject>();
+
     private void Awake()
     {
         ResetGame();
