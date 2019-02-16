@@ -36,6 +36,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4041346542933418}
+  - component: {fileID: 114136561281514124}
   m_Layer: 0
   m_Name: UI
   m_TagString: Untagged
@@ -101,6 +102,20 @@ Transform:
   m_Father: {fileID: 4041346542933418}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114136561281514124
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1590063670423466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6107621186f90c24ca29e26df910a271, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerHealth: 3
+  heartPrefab: {fileID: 1998641600903646, guid: 44738a6eeb7096d4781dd239284fd85e,
+    type: 2}
 --- !u!114 &114653461301290852
 MonoBehaviour:
   m_ObjectHideFlags: 1
