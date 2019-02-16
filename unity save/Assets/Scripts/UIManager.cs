@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-
-    [SerializeField] private int playerHealth;
     [SerializeField] private GameObject heartPrefab;
     private List<Animator> playerOneHearts;
     private List<Animator> playerTwoHearts;
-    private int playerOneHealth = 0;
-    private int playerTwoHealth = 0;
+
+    public SceneManager manager;
 
     private void Awake()
     {
+        manager = FindObjectOfType<SceneManager>();
+
         playerOneHearts = new List<Animator>();
         playerTwoHearts = new List<Animator>();
 
@@ -21,7 +21,7 @@ public class UIManager : MonoBehaviour
         int distancefromCenter = 5;
         float spacing = 1.5f;
 
-        for (int i = 0; i < playerHealth; i++)
+        for (int i = 0; i < manager.playerHealth; i++)
         {
             GameObject hrt = Instantiate(heartPrefab, transform);
             hrt.transform.position = new Vector2(-distancefromCenter - (i * spacing), height);
@@ -32,16 +32,15 @@ public class UIManager : MonoBehaviour
             playerTwoHearts.Add(hrt.GetComponent<Animator>());
         }
 
-        playerOneHealth = playerHealth;
-        playerTwoHealth = playerHealth;
+        
     }
 
     private void Update()
     {
-        for(int h = 0; h<playerHealth; h++)
+        for(int h = 0; h<manager.playerHealth; h++)
         {
-            playerOneHearts[h].SetBool("Solid", playerOneHealth > h);
-            playerTwoHearts[h].SetBool("Solid", playerTwoHealth > h);
+            playerOneHearts[h].SetBool("Solid", manager.playerOneHealth > h);
+            playerTwoHearts[h].SetBool("Solid", manager.playerTwoHealth > h);
         }
     }
 }

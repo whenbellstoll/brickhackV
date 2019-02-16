@@ -27,11 +27,15 @@ public class SceneManager : MonoBehaviour {
 
     private float timer;
 
+    [SerializeField] public int playerHealth;
+
+    [HideInInspector] public int playerOneHealth = 0;
+    [HideInInspector] public int playerTwoHealth = 0;
+
     private GameState state = GameState.building;
 
     private void Awake()
     {
-
         ResetGame();
     }
 
@@ -44,6 +48,9 @@ public class SceneManager : MonoBehaviour {
 
         state = GameState.building;
         SetPlayers(state); //players start on their own side
+
+        playerOneHealth = playerHealth;
+        playerTwoHealth = playerHealth;
     }
 
 	void Update () {
