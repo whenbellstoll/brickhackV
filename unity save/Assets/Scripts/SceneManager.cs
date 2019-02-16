@@ -27,16 +27,15 @@ public class SceneManager : MonoBehaviour {
 
     private float timer;
 
-
-    [SerializeField] private int playerHealth;
-    [SerializeField] private int heartPrefab;
-    private int playerOneHealth;
-    private int playerTwoHealth;
-
     private GameState state = GameState.building;
+
+    [SerializeField] List<GameObject> platformPrefabs;
+    List<GameObject> platforms = new List<GameObject>();
+    List<GameObject> newPlatforms = new List<GameObject>();
 
     private void Awake()
     {
+
         ResetGame();
     }
 
@@ -46,8 +45,6 @@ public class SceneManager : MonoBehaviour {
     public void ResetGame()
     {
         timer = roundTime;
-        playerOneHealth = playerHealth;
-        playerTwoHealth = playerHealth;
 
         state = GameState.building;
         SetPlayers(state); //players start on their own side
