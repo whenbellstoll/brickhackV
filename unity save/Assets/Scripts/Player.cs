@@ -81,29 +81,20 @@ public class Player : MonoBehaviour
 
         
         // moving right
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetAxis("Horizontal") > 0.35f)
         {
             ApplyForce(new Vector2(maxVelocity, 0));
             facingLeft = false;
         }
 
         // moving left
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetAxis("Horizontal") < -0.35f)
         {
             ApplyForce(new Vector2(-maxVelocity, 0));
             facingLeft = true;
         }
         
-        if (Input.GetKey(KeyCode.Space) && timer > 1f)
-        {
-            rolling = true;
-            Transform temp = GetComponentInChildren<Transform>();
-            Vector3 tempScale = temp.localScale;
-            transform.localScale = scaleBy;
-            temp.localScale = tempScale;
-            timer = 0;
 
-        }
 
         if (rolling)
         {
@@ -131,7 +122,7 @@ public class Player : MonoBehaviour
         }
 
         //jump
-        if (Input.GetKey(KeyCode.W) && !falling)
+        if (Input.GetKey("joystick button 0") && !falling)
         {
             ApplyForce(new Vector2(0, jumpSpeed));
             // falling = true;
@@ -171,24 +162,10 @@ public class Player : MonoBehaviour
             maxVelocity = normalSpeed;
         }
 
-        // Timer for roll
-        timer += .01f;
-        if (rolling && timer >= .2f)
-        {
-            rolling = false;
-            transform.localScale = normalScale;
-        }
 
-        // if rolling, then roll
-        if (rolling)
-        {
-            Roll();
-        }
-        // Otherwise, move as normal
-        else
-        {
-            Movement();
-        }
+
+       Movement();
+        
 
         velocity.x = velocity.x / 2;
 
