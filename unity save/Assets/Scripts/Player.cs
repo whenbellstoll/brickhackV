@@ -46,8 +46,6 @@ public class Player : MonoBehaviour
     public bool rolling;                    // Boolean of whether the player is currently rolling
     public bool facingLeft;
     public bool reloading;
-
-
     void Awake()
     {
         QualitySettings.vSyncCount = 1;
