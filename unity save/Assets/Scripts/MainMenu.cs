@@ -9,7 +9,7 @@ public class MainMenu : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0"))
+        if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.LeftShift))
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(gameScene, LoadSceneMode.Single);
         }

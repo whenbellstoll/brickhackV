@@ -257,7 +257,7 @@ public class SceneManager : MonoBehaviour {
 
                 if (timer <= 0)
                 {
-                    if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0"))
+                    if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.RightShift))
                     {
                         Debug.Log("reset button pressed");
                         ResetGame();
