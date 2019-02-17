@@ -43,16 +43,17 @@ public class SceneManager : MonoBehaviour {
     GameObject p1Cursor;
     GameObject p2Cursor;
 
-    [SerializeField] List<GameObject> platformPrefabs;
+    [SerializeField] List<GameObject> buildables;
     List<GameObject> platforms = new List<GameObject>();
     List<GameObject> newPlatforms = new List<GameObject>();
 
-    List<GameObject> trapPrefabs = new List<GameObject>();
-    List<GameObject> traps = new List<GameObject>();
+    public static List<GameObject> traps = new List<GameObject>();
 
     int itemindexOne;
     int itemindexTwo; //Keeps track of which items the players want to set down.
 
+    int hurtTimerOne = 0;
+    int hurtTimerTwo = 0;
     private void Awake()
     {
         ResetGame();
@@ -91,6 +92,60 @@ public class SceneManager : MonoBehaviour {
                     state = GameState.building;
                     BeginBuildPhase();
                 }
+
+                //Next four ifs change the prefab the players select.
+                if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null) //Gross, dispicable flag check, but nonetheless necessary
+                {
+
+
+                    if (Input.GetKeyDown("joystick 1 button 4"))
+                    {
+                        itemindexOne--;
+                        if (itemindexOne < 0)
+                        {
+                            itemindexOne = buildables.Count - 1;
+                        }
+                        GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
+                        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemindexOne], p1Cursor.transform);
+                        Destroy(temp);
+                    }
+
+                    if (Input.GetKeyDown("joystick 1 button 5"))
+                    {
+                        itemindexOne++;
+                        if (itemindexOne >= buildables.Count)
+                        {
+                            itemindexOne = 0;
+                        }
+                        GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
+                        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemindexOne], p1Cursor.transform);
+                        Destroy(temp);
+                    }
+
+                    if (Input.GetKeyDown("joystick 2 button 4"))
+                    {
+                        itemindexTwo--;
+                        if (itemindexTwo < 0)
+                        {
+                            itemindexTwo = buildables.Count - 1;
+                        }
+                        GameObject temp = p2Cursor.GetComponent<StoreObjectToBuild>().obj;
+                        p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemindexTwo], p1Cursor.transform);
+                        Destroy(temp);
+                    }
+
+                    if (Input.GetKeyDown("joystick 2 button 5"))
+                    {
+                        itemindexTwo++;
+                        if (itemindexTwo >= buildables.Count)
+                        {
+                            itemindexTwo = 0;
+                        }
+                        GameObject temp = p2Cursor.GetComponent<StoreObjectToBuild>().obj;
+                        p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemindexTwo], p1Cursor.transform);
+                        Destroy(temp);
+                    }
+                }
                 break;
             case GameState.building:
                 timerDigits[1].SetSprite(Mathf.FloorToInt(timer % 10));
@@ -103,73 +158,39 @@ public class SceneManager : MonoBehaviour {
 
                 if (Input.GetKeyDown("joystick 1 button 0"))
                 {
-                    p1Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
-                    platforms.Add(p1Cursor.GetComponent<StoreObjectToBuild>().obj);
-                    p1Cursor.GetComponent<StoreObjectToBuild>().obj = null;
+                    if(itemindexOne < 4)
+                    {
+                        p1Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
+                        platforms.Add(p1Cursor.GetComponent<StoreObjectToBuild>().obj);
+                        p1Cursor.GetComponent<StoreObjectToBuild>().obj = null;
+                    }
+                    else
+                    {
+                        p1Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
+                        traps.Add(p1Cursor.GetComponent<StoreObjectToBuild>().obj);
+                        p1Cursor.GetComponent<StoreObjectToBuild>().obj = null;
+                    }
                 }
 
                 if(Input.GetKeyDown("joystick 2 button 0"))
                 {
-                    p2Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
-                    platforms.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
-                    p2Cursor.GetComponent<StoreObjectToBuild>().obj = null;
-                }
-
-
-
-                //Next four ifs change the prefab the players select.
-                if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null) //Gross, dispicable flag check, but nonetheless necessary
-                {
-
-
-                    if (Input.GetKeyDown("joystick 1 button 4"))
+                    if (itemindexTwo < 4)
                     {
-                        itemindexOne--;
-                        if (itemindexOne < 0)
-                        {
-                            itemindexOne = platformPrefabs.Count - 1;
-                        }
-                        GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
-                        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[itemindexOne], p1Cursor.transform);
-                        Destroy(temp);
+                        p2Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
+                        platforms.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
+                        p2Cursor.GetComponent<StoreObjectToBuild>().obj = null;
                     }
-
-                    if (Input.GetKeyDown("joystick 1 button 5"))
+                    else
                     {
-                        itemindexOne++;
-                        if (itemindexOne >= platformPrefabs.Count)
-                        {
-                            itemindexOne = 0;
-                        }
-                        GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
-                        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[itemindexOne], p1Cursor.transform);
-                        Destroy(temp);
-                    }
-
-                    if (Input.GetKeyDown("joystick 2 button 4"))
-                    {
-                        itemindexTwo--;
-                        if (itemindexTwo < 0)
-                        {
-                            itemindexTwo = platformPrefabs.Count - 1;
-                        }
-                        GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
-                        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[itemindexTwo], p1Cursor.transform);
-                        Destroy(temp);
-                    }
-
-                    if (Input.GetKeyDown("joystick 2 button 5"))
-                    {
-                        itemindexTwo++;
-                        if (itemindexTwo >= platformPrefabs.Count)
-                        {
-                            itemindexTwo = 0;
-                        }
-                        GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
-                        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[itemindexTwo], p1Cursor.transform);
-                        Destroy(temp);
+                        p2Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
+                        traps.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
+                        p2Cursor.GetComponent<StoreObjectToBuild>().obj = null;
                     }
                 }
+
+
+
+               
                 timer -= Time.deltaTime;
 
                 if (timer <= 0) {
@@ -195,8 +216,17 @@ public class SceneManager : MonoBehaviour {
                     state = GameState.picking;
                     BeginPickingPhase();
                 }                
-
                 break;
+        }
+
+        if(hurtTimerOne > 0)
+        {
+            hurtTimerOne--;
+        }
+
+        if (hurtTimerTwo > 0)
+        {
+            hurtTimerTwo--;
         }
         Debug.Log(state);
 	}
@@ -246,19 +276,52 @@ public class SceneManager : MonoBehaviour {
 
         playerOne.GetComponent<Player>().enabled = false;
         playerTwo.GetComponent<Player>().enabled = false;
+
+        itemindexOne = 0;
+        itemindexTwo = 0;
+        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[0], p1Cursor.transform);
+        p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[0], p2Cursor.transform);
     }
 
     private void BeginBuildPhase()
     {
-        itemindexOne = 0;
-        itemindexTwo = 0;
-        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[0], p1Cursor.transform);
-        p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[0], p2Cursor.transform);
         state = GameState.building;
     }
 
     private void BeginSurvivalPhase()
     {
+        if(p1Cursor.GetComponent<StoreObjectToBuild>().obj != null)
+        {
+            if (itemindexOne < 3)
+            {
+                p1Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
+                platforms.Add(p1Cursor.GetComponent<StoreObjectToBuild>().obj);
+                p1Cursor.GetComponent<StoreObjectToBuild>().obj = null;
+            }
+            else
+            {
+                p1Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
+                traps.Add(p1Cursor.GetComponent<StoreObjectToBuild>().obj);
+                p1Cursor.GetComponent<StoreObjectToBuild>().obj = null;
+            }
+
+        }
+        if (p2Cursor.GetComponent<StoreObjectToBuild>().obj != null)
+        {
+            if (itemindexOne < 3)
+            {
+                p2Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
+                platforms.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
+                p2Cursor.GetComponent<StoreObjectToBuild>().obj = null;
+            }
+            else
+            {
+                p2Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
+                traps.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
+                p2Cursor.GetComponent<StoreObjectToBuild>().obj = null;
+            }
+        }
+
         Destroy(p1Cursor);
         Destroy(p2Cursor);
 
@@ -280,18 +343,18 @@ public class SceneManager : MonoBehaviour {
     {
         foreach (GameObject trap in traps)
         {
-            if (playerOne.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds))
+            if (playerOne.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds) && hurtTimerOne <= 0)
             {
                 playerOne.GetComponent<Player>().currentHealth--;
-                Debug.Log("Player 1 hit");
+                hurtTimerOne = 60;
             }
 
-            if (playerOne.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds))
+            if (playerTwo.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds) && hurtTimerTwo <= 0)
             {
                 playerTwo.GetComponent<Player>().currentHealth--;
-                Debug.Log("Player 2 hit");
+                hurtTimerTwo = 60;
             }
         }
-        Debug.Log("Ran trap stuff");
+        Debug.Log("Traps: " + traps.Count);
     }
 }

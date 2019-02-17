@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311947, g: 0.38074005, b: 0.35872722, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3713,6 +3713,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 114658665042933122, guid: 857ba7e091f707840ba06c2e7bb98682,
         type: 2}
+      propertyPath: buildables.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114658665042933122, guid: 857ba7e091f707840ba06c2e7bb98682,
+        type: 2}
       propertyPath: platformPrefabs.Array.size
       value: 3
       objectReference: {fileID: 0}
@@ -3807,6 +3812,48 @@ Prefab:
       propertyPath: playerHealth
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 114658665042933122, guid: 857ba7e091f707840ba06c2e7bb98682,
+        type: 2}
+      propertyPath: buildables.Array.data[0]
+      value: 
+      objectReference: {fileID: 1343828588518690, guid: d761f4556510a8a4a909dc17228d38df,
+        type: 2}
+    - target: {fileID: 114658665042933122, guid: 857ba7e091f707840ba06c2e7bb98682,
+        type: 2}
+      propertyPath: buildables.Array.data[1]
+      value: 
+      objectReference: {fileID: 1681832833767716, guid: bcd48332e437a374dafc99703a710ce2,
+        type: 2}
+    - target: {fileID: 114658665042933122, guid: 857ba7e091f707840ba06c2e7bb98682,
+        type: 2}
+      propertyPath: buildables.Array.data[2]
+      value: 
+      objectReference: {fileID: 1620160022838226, guid: d7e9788338aba714bac0c1da0f02675d,
+        type: 2}
+    - target: {fileID: 114658665042933122, guid: 857ba7e091f707840ba06c2e7bb98682,
+        type: 2}
+      propertyPath: buildables.Array.data[3]
+      value: 
+      objectReference: {fileID: 1689680402475142, guid: 33ecbc85b33f30947bc55724414fd1bc,
+        type: 2}
+    - target: {fileID: 114658665042933122, guid: 857ba7e091f707840ba06c2e7bb98682,
+        type: 2}
+      propertyPath: buildables.Array.data[4]
+      value: 
+      objectReference: {fileID: 1516468355454526, guid: bc9bf1edc28418940a68faec17388465,
+        type: 2}
+    - target: {fileID: 114658665042933122, guid: 857ba7e091f707840ba06c2e7bb98682,
+        type: 2}
+      propertyPath: buildables.Array.data[5]
+      value: 
+      objectReference: {fileID: 1187550484189648, guid: a2b5bcf0ff2fcce4e8d600766a7dedd8,
+        type: 2}
+    - target: {fileID: 114658665042933122, guid: 857ba7e091f707840ba06c2e7bb98682,
+        type: 2}
+      propertyPath: buildables.Array.data[6]
+      value: 
+      objectReference: {fileID: 1516468355454526, guid: bc9bf1edc28418940a68faec17388465,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 857ba7e091f707840ba06c2e7bb98682, type: 2}
   m_IsPrefabAsset: 0
@@ -3929,7 +3976,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1885980401}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.2, y: -0.54, z: 0}
+  m_LocalPosition: {x: -9.2, y: -12.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

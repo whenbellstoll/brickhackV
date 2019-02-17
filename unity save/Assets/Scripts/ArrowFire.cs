@@ -16,6 +16,7 @@ public class ArrowFire : MonoBehaviour {
     //called by animator
     public void FireArrow()
     {
+        SceneManager.traps.Add(myArrow);
         myArrow.SetActive(true);
         myArrow.transform.position = transform.position;
     }
