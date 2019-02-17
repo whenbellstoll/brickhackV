@@ -28,8 +28,11 @@ public class SceneManager : MonoBehaviour {
     [SerializeField] private float pickTime;
     [SerializeField] private float buildTime;
     [SerializeField] private float roundTime;
+    [SerializeField] private float winTime;
 
     [SerializeField] private Digit[] timerDigits;
+
+    [SerializeField] private GameObject winText;
 
     private float timer;
 
@@ -37,6 +40,9 @@ public class SceneManager : MonoBehaviour {
 
     [HideInInspector] public int playerOneHealth = 0;
     [HideInInspector] public int playerTwoHealth = 0;
+
+    [SerializeField] private Sprite winRed;
+    [SerializeField] private Sprite winBlue;
 
     private GameState state = GameState.building;
 
@@ -68,6 +74,7 @@ public class SceneManager : MonoBehaviour {
     /// </summary>
     public void ResetGame()
     {
+        winText.GetComponent<SpriteRenderer>().enabled = false;
         timer = pickTime;
         playerOne.GetComponent<Player>().currentHealth = playerOne.GetComponent<Player>().baseHealth;
         playerTwo.GetComponent<Player>().currentHealth = playerTwo.GetComponent<Player>().baseHealth;
@@ -161,6 +168,10 @@ public class SceneManager : MonoBehaviour {
                         Destroy(temp);
                     }
                 }
+                if (playerOneHealth <= 0 || playerTwoHealth <= 0)
+                {
+                    BeginWinPhase();
+                }
                 break;
             case GameState.building:
                 timerDigits[1].SetSprite(Mathf.FloorToInt(timer % 10));
@@ -212,7 +223,10 @@ public class SceneManager : MonoBehaviour {
                     timer = roundTime;
                     BeginSurvivalPhase();
                 }
-
+                if (playerOneHealth <= 0 || playerTwoHealth <= 0)
+                {
+                    BeginWinPhase();
+                }
                 break;
             case GameState.survival:
                 p1Cursor = null;
@@ -224,10 +238,6 @@ public class SceneManager : MonoBehaviour {
                 //increase timer and check if round is over
                 timer -= Time.deltaTime;
 
-                if(playerOneHealth <= 0 || playerTwoHealth <= 0)
-                {
-                    BeginWinPhase();
-                }
 
                 if (timer <= 0)
                 {
@@ -235,17 +245,28 @@ public class SceneManager : MonoBehaviour {
 
                     state = GameState.picking;
                     BeginPickingPhase();
-                }                
+                }
+                if (playerOneHealth <= 0 || playerTwoHealth <= 0)
+                {
+                    BeginWinPhase();
+                }
                 break;
             case GameState.win:
-                if(Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0")){
-                    Debug.Log("reset button pressed");
-                    ResetGame();
+                timer -= Time.deltaTime;
+                Debug.Log(timer);
+
+                if (timer <= 0)
+                {
+                    if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0"))
+                    {
+                        Debug.Log("reset button pressed");
+                        ResetGame();
+                    }
                 }
                 break;
         }
 
-        if(hurtTimerOne > 0)
+        if (hurtTimerOne > 0)
         {
             hurtTimerOne--;
         }
@@ -369,13 +390,15 @@ public class SceneManager : MonoBehaviour {
     private void BeginWinPhase()
     {
         state = GameState.win;
+        timer = winTime;
+        winText.GetComponent<SpriteRenderer>().enabled = true;
         if(playerOneHealth <= 0)
         {
-            Debug.Log("Red wins");
+            winText.GetComponent<SpriteRenderer>().sprite = winRed;
         }
         else
         {
-            Debug.Log("Blue wins");
+            winText.GetComponent<SpriteRenderer>().sprite = winBlue;
         }
     }
 
