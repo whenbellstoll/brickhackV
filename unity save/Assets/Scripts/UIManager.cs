@@ -37,6 +37,21 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        if(!SceneManager.heartsPositionCorrect)
+        {
+            List<Vector3> hrt1transforms = new List<Vector3>();
+            for(int i = 0; i < playerOneHearts.Count; i++)
+            {
+                hrt1transforms.Add(playerOneHearts[i].transform.position);
+                playerOneHearts[i].transform.position = playerTwoHearts[i].transform.position;
+            }
+            for(int i = 0; i < hrt1transforms.Count; i++)
+            {
+                playerTwoHearts[i].transform.position = hrt1transforms[i];
+            }
+
+            SceneManager.heartsPositionCorrect = true;
+        }
         for(int h = 0; h<manager.playerHealth; h++)
         {
             playerOneHearts[h].SetBool("Solid", manager.playerOneHealth > h);
