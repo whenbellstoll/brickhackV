@@ -188,7 +188,7 @@ public class SceneManager : MonoBehaviour {
 
                 if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown(KeyCode.F))
                 {
-                    if(itemindexOne < 4)
+                    if (p1Cursor.GetComponent<StoreObjectToBuild>().obj.tag == "Platform")
                     {
                         p1Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
                         platforms.Add(p1Cursor.GetComponent<StoreObjectToBuild>().obj);
@@ -204,18 +204,20 @@ public class SceneManager : MonoBehaviour {
 
                 if(Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.RightShift))
                 {
-                    if (itemindexTwo < 4)
-                    {
-                        p2Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
-                        platforms.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
-                        p2Cursor.GetComponent<StoreObjectToBuild>().obj = null;
-                    }
-                    else
+                    if (p2Cursor.GetComponent<StoreObjectToBuild>().obj.tag == "Trap")
                     {
                         p2Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
                         traps.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
                         p2Cursor.GetComponent<StoreObjectToBuild>().obj = null;
                     }
+                    else
+                    {
+                        p2Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
+                        platforms.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
+                        p2Cursor.GetComponent<StoreObjectToBuild>().obj = null;
+                    }
+                        
+                    
                 }
 
 
@@ -345,7 +347,7 @@ public class SceneManager : MonoBehaviour {
     {
         if(p1Cursor.GetComponent<StoreObjectToBuild>().obj != null)
         {
-            if (itemindexOne < 4)
+            if (p1Cursor.GetComponent<StoreObjectToBuild>().obj.tag == "Platform")
             {
                 p1Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
                 platforms.Add(p1Cursor.GetComponent<StoreObjectToBuild>().obj);
@@ -361,16 +363,16 @@ public class SceneManager : MonoBehaviour {
         }
         if (p2Cursor.GetComponent<StoreObjectToBuild>().obj != null)
         {
-            if (itemindexOne < 4)
+            if (p2Cursor.GetComponent<StoreObjectToBuild>().obj.tag == "Trap")
             {
                 p2Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
-                platforms.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
+                traps.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
                 p2Cursor.GetComponent<StoreObjectToBuild>().obj = null;
             }
             else
             {
                 p2Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
-                traps.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
+                platforms.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
                 p2Cursor.GetComponent<StoreObjectToBuild>().obj = null;
             }
         }
