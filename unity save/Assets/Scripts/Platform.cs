@@ -14,32 +14,12 @@ public class Platform : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         position = transform.position;
-        gameObject.GetComponent<ControlWithJoystick>().enabled = false;
 
         cursor = GameObject.Find("Cursor");
-        Debug.Log(cursor.GetComponent<BoxCollider2D>().bounds);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
-        TestForClicked();
-
-        transform.position = position;
+        //transform.position = position;
 	}
-
-    bool TestForClicked()
-    {
-        Debug.Log("we got here");
-        //tests collision between platform and cursor
-        if (gameObject.GetComponent<BoxCollider2D>().bounds.Intersects(cursor.GetComponent<BoxCollider2D>().bounds))
-        {
-            if (Input.GetKeyDown("joystick button 0"))
-            {
-                cursor.GetComponent<StoreObjectToBuild>().obj = gameObject;
-            }
-            Debug.Log("collision detected");
-        }
-        return false;
-    }
 }

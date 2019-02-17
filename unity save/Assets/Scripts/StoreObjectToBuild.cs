@@ -13,6 +13,7 @@ public class StoreObjectToBuild : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+        if( obj != null )
+        obj.transform.position = transform.position;
 	}
 }

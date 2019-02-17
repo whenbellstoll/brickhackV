@@ -72,15 +72,19 @@ public class SceneManager : MonoBehaviour {
 
         switch(state){
             case GameState.picking:
+                timerDigits[1].SetSprite(Mathf.FloorToInt(timer % 10));
+                timerDigits[0].SetSprite(Mathf.FloorToInt((timer % 100) / 10));
+
                 timer -= Time.deltaTime;
                 if(timer <= 0)
                 {
                     timer = buildTime;
-                    state = GameState.building;
-                    BeginBuildPhase();
+                    BeginBuildPhase();                    
                 }
                 break;
             case GameState.building:
+                timerDigits[1].SetSprite(Mathf.FloorToInt(timer % 10));
+                timerDigits[0].SetSprite(Mathf.FloorToInt((timer % 100) / 10));
 
                 foreach (Digit digit in timerDigits)
                 {
@@ -90,15 +94,16 @@ public class SceneManager : MonoBehaviour {
                 //this will all be changed when we start differentaiting between controllers
                 if (Input.GetKeyDown("joystick button 0"))
                 {
-                    p1Cursor.GetComponent<StoreObjectToBuild>().obj.GetComponent<ControlWithJoystick>().enabled = false;
+                    p1Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
                     platforms.Add(p1Cursor.GetComponent<StoreObjectToBuild>().obj);
                     p1Cursor.GetComponent<StoreObjectToBuild>().obj = null;
                 }
 
-                if (buildTime <= 0) {
-                    timer = roundTime;
+                timer -= Time.deltaTime;
 
-                    state = GameState.survival;
+                if (timer <= 0) {
+                    timer = roundTime;
+                    BeginSurvivalPhase();
                     SetPlayers(state); //place players on opponents side   
                 }
 
@@ -151,19 +156,29 @@ public class SceneManager : MonoBehaviour {
         p1Cursor = Instantiate(cursorPrefab);
         p2Cursor = Instantiate(cursorPrefab);
 
-        float xPos = -5f;
-        for(int i = 0; i < 2; i++)
-        {
-            
-        }
+        p1Cursor.GetComponent<ControlWithJoystick>().controllerNum = 1;
+        p2Cursor.GetComponent<ControlWithJoystick>().controllerNum = 2;
+
+        playerOne.GetComponent<Player>().enabled = false;
+        playerTwo.GetComponent<Player>().enabled = false;
     }
 
     private void BeginBuildPhase()
     {
-        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[Random.Range(0, platformPrefabs.Count)]);
-        p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[Random.Range(0, platformPrefabs.Count)]);
+        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[Random.Range(0, platformPrefabs.Count)], p1Cursor.transform);
+        Debug.Log("Istantiated Platform Clone");
+        state = GameState.building;
+        //p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[Random.Range(0, platformPrefabs.Count)], p2Cursor.transform);
+    }
 
-        p1Cursor.GetComponent<StoreObjectToBuild>().obj.GetComponent<ControlWithJoystick>().enabled = true;
-        p2Cursor.GetComponent<StoreObjectToBuild>().obj.GetComponent<ControlWithJoystick>().enabled = true;
+    private void BeginSurvivalPhase()
+    {
+        Destroy(p1Cursor);
+        Destroy(p2Cursor);
+
+        playerOne.GetComponent<Player>().enabled = true;
+        playerTwo.GetComponent<Player>().enabled = true;
+
+        state = GameState.survival;
     }
 }
