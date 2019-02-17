@@ -406,18 +406,21 @@ public class SceneManager : MonoBehaviour {
 
     private void HandlePlayerTrapCollisions()
     {
-        foreach (GameObject trap in traps)
+        if (state == GameState.survival)
         {
-            if (playerOne.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds) && hurtTimerOne <= 0)
+            foreach (GameObject trap in traps)
             {
-                playerOne.GetComponent<Player>().currentHealth--;
-                hurtTimerOne = 60;
-            }
+                if (playerOne.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds) && hurtTimerOne <= 0)
+                {
+                    playerOne.GetComponent<Player>().currentHealth--;
+                    hurtTimerOne = 60;
+                }
 
-            if (playerTwo.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds) && hurtTimerTwo <= 0)
-            {
-                playerTwo.GetComponent<Player>().currentHealth--;
-                hurtTimerTwo = 60;
+                if (playerTwo.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds) && hurtTimerTwo <= 0)
+                {
+                    playerTwo.GetComponent<Player>().currentHealth--;
+                    hurtTimerTwo = 60;
+                }
             }
         }
     }
