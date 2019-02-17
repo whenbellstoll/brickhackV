@@ -6,22 +6,19 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 public class Arrow : MonoBehaviour {
 
-    private Vector2 velocity;
+    [SerializeField] private Vector2 velocity;
 
     private void Update()
     {
-        transform.position += (Vector3)velocity;
+        transform.position += (Vector3)velocity * Time.deltaTime;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Arrow")) { return; }
-
-        if (collision.CompareTag("Player"))
+        Debug.Log("trigger enter");
+        if(collision.gameObject.layer == 8)
         {
-            //DO DAMAGE TO PLAYER HERE
+            gameObject.SetActive(false);
         }
-
-        gameObject.SetActive(false);
     }
 }
