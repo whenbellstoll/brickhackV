@@ -22,6 +22,8 @@ public class SceneManager : MonoBehaviour {
     [SerializeField] private Vector2 startPositionOne;
     [SerializeField] private Vector2 startPositionTwo;
 
+    bool positionsAreSwapped = false;
+
     [SerializeField] private float pickTime;
     [SerializeField] private float buildTime;
     [SerializeField] private float roundTime;
@@ -44,7 +46,6 @@ public class SceneManager : MonoBehaviour {
     [SerializeField] List<GameObject> platformPrefabs;
     List<GameObject> platforms = new List<GameObject>();
     List<GameObject> newPlatforms = new List<GameObject>();
-    bool buildingComplete = false;
 
     private void Awake()
     {
@@ -60,7 +61,6 @@ public class SceneManager : MonoBehaviour {
 
         state = GameState.picking;
         BeginPickingPhase();
-        SetPlayers(state); //players start on their own side
 
         playerOneHealth = playerHealth;
         playerTwoHealth = playerHealth;
@@ -111,7 +111,6 @@ public class SceneManager : MonoBehaviour {
                 if (timer <= 0) {
                     timer = roundTime;
                     BeginSurvivalPhase();
-                    SetPlayers(state); //place players on opponents side   
                 }
 
                 break;
@@ -129,7 +128,6 @@ public class SceneManager : MonoBehaviour {
 
                     state = GameState.picking;
                     BeginPickingPhase();
-                    SetPlayers(state); //return players to own side
                 }                
 
                 break;
@@ -141,27 +139,28 @@ public class SceneManager : MonoBehaviour {
     /// sets the players position
     /// </summary>
     /// <param name="one">true when players are on their origional sides</param>
-    private void SetPlayers(GameState state)
+    private void SetPlayers()
     {
-        switch (state)
+        if (positionsAreSwapped)
         {
-            case GameState.building:
-                playerOne.transform.position = startPositionOne;
-                playerTwo.transform.position = startPositionTwo;
-                break;
-            case GameState.survival:
-                playerOne.transform.position = startPositionTwo;
-                playerTwo.transform.position = startPositionOne;
-                break;
-
+            playerOne.transform.position = startPositionTwo;
+            playerTwo.transform.position = startPositionOne;
         }
-           
+        else
+        {
+            playerOne.transform.position = startPositionOne;
+            playerTwo.transform.position = startPositionTwo;
+        }
+        positionsAreSwapped = !positionsAreSwapped;
     }
 
     private void BeginPickingPhase()
     {
         p1Cursor = Instantiate(cursorPrefab);
         p2Cursor = Instantiate(cursorPrefab);
+
+        p1Cursor.transform.position = new Vector3(playerOne.transform.position.x, playerOne.transform.position.y + 10, 0);
+        p2Cursor.transform.position = new Vector3(playerTwo.transform.position.x, playerTwo.transform.position.y + 10, 0);
 
         p1Cursor.GetComponent<ControlWithJoystick>().controllerNum = 1;
         p2Cursor.GetComponent<ControlWithJoystick>().controllerNum = 2;
@@ -185,6 +184,8 @@ public class SceneManager : MonoBehaviour {
 
         playerOne.GetComponent<Player>().enabled = true;
         playerTwo.GetComponent<Player>().enabled = true;
+
+        SetPlayers();
 
         state = GameState.survival;
     }
