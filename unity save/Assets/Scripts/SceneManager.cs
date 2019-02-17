@@ -120,7 +120,7 @@ public class SceneManager : MonoBehaviour {
                 {
 
 
-                    if (Input.GetKeyDown("joystick 1 button 4"))
+                    if (Input.GetKeyDown("joystick 1 button 4") || Input.GetKeyDown(KeyCode.Q))
                     {
                         itemindexOne--;
                         if (itemindexOne < 0)
@@ -132,7 +132,7 @@ public class SceneManager : MonoBehaviour {
                         Destroy(temp);
                     }
 
-                    if (Input.GetKeyDown("joystick 1 button 5"))
+                    if (Input.GetKeyDown("joystick 1 button 5") || Input.GetKeyDown(KeyCode.E))
                     {
                         itemindexOne++;
                         if (itemindexOne >= buildables.Count)
@@ -144,7 +144,7 @@ public class SceneManager : MonoBehaviour {
                         Destroy(temp);
                     }
 
-                    if (Input.GetKeyDown("joystick 2 button 4"))
+                    if (Input.GetKeyDown("joystick 2 button 4") || Input.GetKeyDown(KeyCode.RightControl))
                     {
                         itemindexTwo--;
                         if (itemindexTwo < 0)
@@ -156,7 +156,7 @@ public class SceneManager : MonoBehaviour {
                         Destroy(temp);
                     }
 
-                    if (Input.GetKeyDown("joystick 2 button 5"))
+                    if (Input.GetKeyDown("joystick 2 button 5") || Input.GetKeyDown(KeyCode.Insert))
                     {
                         itemindexTwo++;
                         if (itemindexTwo >= buildables.Count)
@@ -182,7 +182,7 @@ public class SceneManager : MonoBehaviour {
                     digit.SetSprite(0);
                 }
 
-                if (Input.GetKeyDown("joystick 1 button 0"))
+                if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown(KeyCode.X))
                 {
                     if(itemindexOne < 4)
                     {
@@ -198,7 +198,7 @@ public class SceneManager : MonoBehaviour {
                     }
                 }
 
-                if(Input.GetKeyDown("joystick 2 button 0"))
+                if(Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.RightShift))
                 {
                     if (itemindexTwo < 4)
                     {
