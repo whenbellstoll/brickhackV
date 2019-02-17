@@ -158,6 +158,12 @@ public class Player : MonoBehaviour
         if (Input.GetAxis(jump) > 0 && !falling)
         {
             ApplyForce(new Vector2(0, jumpSpeed));
+            if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.RightShift))
+            {
+                //forgive me Father, for I have sinned
+                GameObject.Find("SceneManager").GetComponent<SceneManager>().audioPlayer.clip = GameObject.Find("SceneManager").GetComponent<SceneManager>().audioClips[8];
+                GameObject.Find("SceneManager").GetComponent<SceneManager>().audioPlayer.Play();
+            }
             // falling = true;
         }
         else 

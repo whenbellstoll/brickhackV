@@ -56,9 +56,9 @@ public class SceneManager : MonoBehaviour {
 
     public static List<GameObject> traps = new List<GameObject>();
 
-    [SerializeField] private AudioSource audioPlayer;
+    [SerializeField] public AudioSource audioPlayer;
     [SerializeField] private AudioSource winAnnoucer;
-    [SerializeField] private List<AudioClip> audioClips = new List<AudioClip>();
+    [SerializeField] public List<AudioClip> audioClips = new List<AudioClip>();
 
     int itemindexOne;
     int itemindexTwo; //Keeps track of which items the players want to set down.
@@ -197,12 +197,24 @@ public class SceneManager : MonoBehaviour {
                         p1Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
                         platforms.Add(p1Cursor.GetComponent<StoreObjectToBuild>().obj);
                         p1Cursor.GetComponent<StoreObjectToBuild>().obj = null;
+
+                        if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.RightShift))
+                        {
+                            audioPlayer.clip = audioClips[8];
+                            audioPlayer.Play();
+                        }
                     }
                     else
                     {
                         p1Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
                         traps.Add(p1Cursor.GetComponent<StoreObjectToBuild>().obj);
                         p1Cursor.GetComponent<StoreObjectToBuild>().obj = null;
+
+                        if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.RightShift))
+                        {
+                            audioPlayer.clip = audioClips[8];
+                            audioPlayer.Play();
+                        }
                     }
                 }
 
@@ -213,12 +225,24 @@ public class SceneManager : MonoBehaviour {
                         p2Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
                         traps.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
                         p2Cursor.GetComponent<StoreObjectToBuild>().obj = null;
+
+                        if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.RightShift))
+                        {
+                            audioPlayer.clip = audioClips[8];
+                            audioPlayer.Play();
+                        }
                     }
                     else
                     {
                         p2Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
                         platforms.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
                         p2Cursor.GetComponent<StoreObjectToBuild>().obj = null;
+
+                        if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.RightShift))
+                        {
+                            audioPlayer.clip = audioClips[8];
+                            audioPlayer.Play();
+                        }
                     }
                         
                     
@@ -235,6 +259,8 @@ public class SceneManager : MonoBehaviour {
                 {
                     BeginWinPhase();
                 }
+
+
                 break;
             case GameState.survival:
                 p1Cursor = null;
@@ -257,6 +283,12 @@ public class SceneManager : MonoBehaviour {
                 if (playerOneHealth <= 0 || playerTwoHealth <= 0)
                 {
                     BeginWinPhase();
+                }
+
+                if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.RightShift))
+                {
+                    audioPlayer.clip = audioClips[8];
+                    audioPlayer.Play();
                 }
                 break;
             case GameState.win:
