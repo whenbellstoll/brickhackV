@@ -6,7 +6,8 @@ public enum GameState
 {
     picking,
     building,
-    survival
+    survival,
+    win
 }
 
 
@@ -66,7 +67,20 @@ public class SceneManager : MonoBehaviour {
     /// </summary>
     public void ResetGame()
     {
-        timer = roundTime;
+        timer = pickTime;
+        playerOne.GetComponent<Player>().currentHealth = playerOne.GetComponent<Player>().baseHealth;
+        playerTwo.GetComponent<Player>().currentHealth = playerTwo.GetComponent<Player>().baseHealth;
+
+        for(int i = 0; i < platforms.Count; i++)
+        {
+            Destroy(platforms[i]);
+        }
+        for(int i = 0; i < traps.Count; i++)
+        {
+            Destroy(traps[i]);
+        }
+        platforms.Clear();
+        traps.Clear();
 
         state = GameState.picking;
         BeginPickingPhase();
@@ -209,6 +223,11 @@ public class SceneManager : MonoBehaviour {
                 //increase timer and check if round is over
                 timer -= Time.deltaTime;
 
+                if(playerOneHealth <= 0 || playerTwoHealth <= 0)
+                {
+                    BeginWinPhase();
+                }
+
                 if (timer <= 0)
                 {
                     timer = pickTime; //reset the timer
@@ -216,6 +235,12 @@ public class SceneManager : MonoBehaviour {
                     state = GameState.picking;
                     BeginPickingPhase();
                 }                
+                break;
+            case GameState.win:
+                if(Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0")){
+                    Debug.Log("reset button pressed");
+                    ResetGame();
+                }
                 break;
         }
 
@@ -339,6 +364,19 @@ public class SceneManager : MonoBehaviour {
         state = GameState.survival;
     }
 
+    private void BeginWinPhase()
+    {
+        state = GameState.win;
+        if(playerOneHealth <= 0)
+        {
+            Debug.Log("Red wins");
+        }
+        else
+        {
+            Debug.Log("Blue wins");
+        }
+    }
+
     private void HandlePlayerTrapCollisions()
     {
         foreach (GameObject trap in traps)
@@ -355,6 +393,5 @@ public class SceneManager : MonoBehaviour {
                 hurtTimerTwo = 60;
             }
         }
-        Debug.Log("Traps: " + traps.Count);
     }
 }
