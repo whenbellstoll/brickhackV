@@ -345,7 +345,7 @@ public class SceneManager : MonoBehaviour {
     {
         if(p1Cursor.GetComponent<StoreObjectToBuild>().obj != null)
         {
-            if (itemindexOne < 3)
+            if (itemindexOne < 4)
             {
                 p1Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
                 platforms.Add(p1Cursor.GetComponent<StoreObjectToBuild>().obj);
@@ -361,7 +361,7 @@ public class SceneManager : MonoBehaviour {
         }
         if (p2Cursor.GetComponent<StoreObjectToBuild>().obj != null)
         {
-            if (itemindexOne < 3)
+            if (itemindexOne < 4)
             {
                 p2Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
                 platforms.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
