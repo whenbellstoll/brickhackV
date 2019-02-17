@@ -7,7 +7,6 @@ public class ControlWithJoystick : MonoBehaviour {
     public int controllerNum;
     string horizontal;
     string vertical;
-    string aButton;
 
     Vector3 position;
     public float speed = 0.1f;

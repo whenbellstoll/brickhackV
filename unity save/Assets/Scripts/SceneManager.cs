@@ -92,11 +92,18 @@ public class SceneManager : MonoBehaviour {
                 }
 
                 //this will all be changed when we start differentaiting between controllers
-                if (Input.GetKeyDown("joystick button 0"))
+                if (Input.GetKeyDown("joystick 1 button 0"))
                 {
                     p1Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
                     platforms.Add(p1Cursor.GetComponent<StoreObjectToBuild>().obj);
                     p1Cursor.GetComponent<StoreObjectToBuild>().obj = null;
+                }
+
+                if(Input.GetKeyDown("joystick 2 button 0"))
+                {
+                    p2Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
+                    platforms.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
+                    p2Cursor.GetComponent<StoreObjectToBuild>().obj = null;
                 }
 
                 timer -= Time.deltaTime;
