@@ -156,6 +156,9 @@ public class SceneManager : MonoBehaviour {
         p1Cursor = Instantiate(cursorPrefab);
         p2Cursor = Instantiate(cursorPrefab);
 
+        p1Cursor.GetComponent<ControlWithJoystick>().controllerNum = 1;
+        p2Cursor.GetComponent<ControlWithJoystick>().controllerNum = 2;
+
         playerOne.GetComponent<Player>().enabled = false;
         playerTwo.GetComponent<Player>().enabled = false;
     }
