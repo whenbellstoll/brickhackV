@@ -24,14 +24,15 @@ public class ArrowFire : MonoBehaviour {
 
     private void Update()
     {
-        if (facingLeft)
+        if (transform.position.x < 0)
         {
-            transform.rotation = Quaternion.Euler(0, 180, 0);
+            facingLeft = true;
         }
         else
         {
-            transform.rotation = Quaternion.Euler(0, 0, 0);
+            facingLeft = false;
         }
+        GetComponent<SpriteRenderer>().flipX = !facingLeft;
     }
 
     //called by animator
@@ -39,9 +40,14 @@ public class ArrowFire : MonoBehaviour {
     {
         SceneManager.traps.Add(myArrow);
         myArrow.SetActive(true);
-        if (!facingLeft)
+        if (facingLeft)
         {
-            myArrow.GetComponent<Arrow>().velocity.x *= -1;
+            myArrow.GetComponent<Arrow>().velocity.x = -10;
+        }
+        else
+        {
+            myArrow.GetComponent<Arrow>().velocity.x = 10;
+
         }
         myArrow.transform.position = transform.position;
     }

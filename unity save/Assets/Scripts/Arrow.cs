@@ -10,6 +10,7 @@ public class Arrow : MonoBehaviour {
 
     private void Update()
     {
+        GetComponent<SpriteRenderer>().flipX = transform.position.x > 0;
         transform.position += (Vector3)velocity * Time.deltaTime;
     }
 
