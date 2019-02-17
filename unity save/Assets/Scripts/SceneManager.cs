@@ -47,6 +47,7 @@ public class SceneManager : MonoBehaviour {
     List<GameObject> platforms = new List<GameObject>();
     List<GameObject> newPlatforms = new List<GameObject>();
 
+    List<GameObject> trapPrefabs = new List<GameObject>();
     List<GameObject> traps = new List<GameObject>();
 
     private void Awake()
@@ -63,16 +64,17 @@ public class SceneManager : MonoBehaviour {
 
         state = GameState.picking;
         BeginPickingPhase();
-
-        playerOneHealth = playerOne.GetComponent<Player>().currentHealth;
-        playerTwoHealth = playerTwo.GetComponent<Player>().currentHealth;
     }
 
 	void Update () {
+        HandlePlayerTrapCollisions();
+
+        playerOneHealth = playerOne.GetComponent<Player>().currentHealth;
+        playerTwoHealth = playerTwo.GetComponent<Player>().currentHealth;
 
         //heartTest.GetComponent<Animator>().SetBool("Solid", false);
 
-        switch(state){
+        switch (state){
             case GameState.picking:
                 timerDigits[1].SetSprite(Mathf.FloorToInt(timer % 10));
                 timerDigits[0].SetSprite(Mathf.FloorToInt((timer % 100) / 10));
@@ -219,12 +221,15 @@ public class SceneManager : MonoBehaviour {
             if (playerOne.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds))
             {
                 playerOne.GetComponent<Player>().currentHealth--;
+                Debug.Log("Player 1 hit");
             }
 
             if (playerOne.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds))
             {
                 playerTwo.GetComponent<Player>().currentHealth--;
+                Debug.Log("Player 2 hit");
             }
         }
+        Debug.Log("Ran trap stuff");
     }
 }
