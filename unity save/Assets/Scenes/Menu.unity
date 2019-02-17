@@ -440,7 +440,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141d33dc70ed2d54093dd20bb9d0370d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameScene: Game
+  gameScene: Game_Backup
   instructionsScene: Instructions
 --- !u!1 &970292463
 GameObject:
