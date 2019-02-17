@@ -22,7 +22,7 @@ public class SceneManager : MonoBehaviour {
     [SerializeField] private Vector2 startPositionOne;
     [SerializeField] private Vector2 startPositionTwo;
 
-    bool positionsAreSwapped = false;
+    bool positionsGetSwapped = true;
 
     [SerializeField] private float pickTime;
     [SerializeField] private float buildTime;
@@ -94,7 +94,6 @@ public class SceneManager : MonoBehaviour {
                     digit.SetSprite(0);
                 }
 
-                //this will all be changed when we start differentaiting between controllers
                 if (Input.GetKeyDown("joystick 1 button 0"))
                 {
                     p1Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
@@ -146,7 +145,7 @@ public class SceneManager : MonoBehaviour {
     /// <param name="one">true when players are on their origional sides</param>
     private void SetPlayers()
     {
-        if (positionsAreSwapped)
+        if (positionsGetSwapped)
         {
             playerOne.transform.position = startPositionTwo;
             playerTwo.transform.position = startPositionOne;
@@ -156,7 +155,7 @@ public class SceneManager : MonoBehaviour {
             playerOne.transform.position = startPositionOne;
             playerTwo.transform.position = startPositionTwo;
         }
-        positionsAreSwapped = !positionsAreSwapped;
+        positionsGetSwapped = !positionsGetSwapped;
     }
 
     private void BeginPickingPhase()
@@ -211,5 +210,21 @@ public class SceneManager : MonoBehaviour {
         SetPlayers();
 
         state = GameState.survival;
+    }
+
+    private void HandlePlayerTrapCollisions()
+    {
+        foreach (GameObject trap in traps)
+        {
+            if (playerOne.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds))
+            {
+                playerOne.GetComponent<Player>().currentHealth--;
+            }
+
+            if (playerOne.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds))
+            {
+                playerTwo.GetComponent<Player>().currentHealth--;
+            }
+        }
     }
 }
