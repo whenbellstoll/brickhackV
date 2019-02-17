@@ -46,6 +46,9 @@ public class SceneManager : MonoBehaviour {
     List<GameObject> newPlatforms = new List<GameObject>();
     bool buildingComplete = false;
 
+    [SerializeField] private GameObject spikesPrefab;
+    List<GameObject> traps = new List<GameObject>();
+
     private void Awake()
     {
         ResetGame();
@@ -78,6 +81,7 @@ public class SceneManager : MonoBehaviour {
                     timer = buildTime;
                     state = GameState.building;
                     BeginBuildPhase();
+                    Debug.Log(state);
                 }
                 break;
             case GameState.building:
@@ -100,13 +104,18 @@ public class SceneManager : MonoBehaviour {
 
                     state = GameState.survival;
                     SetPlayers(state); //place players on opponents side   
+                    Debug.Log(state);
                 }
 
                 break;
             case GameState.survival:
+                p1Cursor = null;
+                p2Cursor = null;
 
                 timerDigits[1].SetSprite(Mathf.FloorToInt(timer % 10));
                 timerDigits[0].SetSprite(Mathf.FloorToInt((timer % 100) / 10));
+
+                HandlePlayerTrapCollisions();
 
                 //increase timer and check if round is over
                 timer -= Time.deltaTime;
@@ -118,11 +127,11 @@ public class SceneManager : MonoBehaviour {
                     state = GameState.picking;
                     BeginPickingPhase();
                     SetPlayers(state); //return players to own side
+                    Debug.Log(state);
                 }                
 
                 break;
         }
-        Debug.Log(state);
 	}
 
     /// <summary>
@@ -165,5 +174,17 @@ public class SceneManager : MonoBehaviour {
 
         p1Cursor.GetComponent<StoreObjectToBuild>().obj.GetComponent<ControlWithJoystick>().enabled = true;
         p2Cursor.GetComponent<StoreObjectToBuild>().obj.GetComponent<ControlWithJoystick>().enabled = true;
+    }
+
+    void HandlePlayerTrapCollisions()
+    {
+        foreach (GameObject trap in traps)
+        {
+            if (playerOne.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds))
+            {
+                playerOneHealth--;
+                Debug.Log(playerOneHealth);
+            }
+        }
     }
 }
