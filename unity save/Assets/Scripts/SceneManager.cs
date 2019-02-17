@@ -179,10 +179,12 @@ public class SceneManager : MonoBehaviour {
                 timerDigits[1].SetSprite(Mathf.FloorToInt(timer % 10));
                 timerDigits[0].SetSprite(Mathf.FloorToInt((timer % 100) / 10));
 
-                foreach (Digit digit in timerDigits)
-                {
-                    digit.SetSprite(0);
-                }
+                timer -= Time.deltaTime;
+
+                //foreach (Digit digit in timerDigits)
+                //{
+                //   digit.SetSprite(0);
+                //}
 
                 if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown(KeyCode.F))
                 {
@@ -218,8 +220,6 @@ public class SceneManager : MonoBehaviour {
 
 
 
-               
-                timer -= Time.deltaTime;
 
                 if (timer <= 0) {
                     timer = roundTime;
@@ -307,6 +307,9 @@ public class SceneManager : MonoBehaviour {
 
         p1Cursor.GetComponent<SpriteRenderer>().color = Color.blue;
         p2Cursor.GetComponent<SpriteRenderer>().color = Color.red;
+
+        p1Cursor.GetComponent<ControlWithJoystick>().speed = 0.25f;
+        p2Cursor.GetComponent<ControlWithJoystick>().speed = 0.25f;
 
         p1Cursor.transform.position = new Vector3(playerOne.transform.position.x, playerOne.transform.position.y + 10, 0);
         p2Cursor.transform.position = new Vector3(playerTwo.transform.position.x, playerTwo.transform.position.y + 10, 0);
