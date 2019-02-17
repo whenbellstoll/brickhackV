@@ -22,7 +22,7 @@ public class SceneManager : MonoBehaviour {
     [SerializeField] private Vector2 startPositionOne;
     [SerializeField] private Vector2 startPositionTwo;
 
-    bool positionsAreSwapped = false;
+    bool positionsGetSwapped = true;
 
     [SerializeField] private float pickTime;
     [SerializeField] private float buildTime;
@@ -47,6 +47,7 @@ public class SceneManager : MonoBehaviour {
     List<GameObject> platforms = new List<GameObject>();
     List<GameObject> newPlatforms = new List<GameObject>();
 
+    List<GameObject> trapPrefabs = new List<GameObject>();
     List<GameObject> traps = new List<GameObject>();
 
     int itemindexOne;
@@ -68,16 +69,17 @@ public class SceneManager : MonoBehaviour {
 
         state = GameState.picking;
         BeginPickingPhase();
-
-        playerOneHealth = playerHealth;
-        playerTwoHealth = playerHealth;
     }
 
 	void Update () {
+        HandlePlayerTrapCollisions();
+
+        playerOneHealth = playerOne.GetComponent<Player>().currentHealth;
+        playerTwoHealth = playerTwo.GetComponent<Player>().currentHealth;
 
         //heartTest.GetComponent<Animator>().SetBool("Solid", false);
 
-        switch(state){
+        switch (state){
             case GameState.picking:
                 timerDigits[1].SetSprite(Mathf.FloorToInt(timer % 10));
                 timerDigits[0].SetSprite(Mathf.FloorToInt((timer % 100) / 10));
@@ -99,7 +101,6 @@ public class SceneManager : MonoBehaviour {
                     digit.SetSprite(0);
                 }
 
-                //this will all be changed when we start differentaiting between controllers
                 if (Input.GetKeyDown("joystick 1 button 0"))
                 {
                     p1Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
@@ -184,8 +185,6 @@ public class SceneManager : MonoBehaviour {
                 timerDigits[1].SetSprite(Mathf.FloorToInt(timer % 10));
                 timerDigits[0].SetSprite(Mathf.FloorToInt((timer % 100) / 10));
 
-                HandlePlayerTrapCollisions();
-
                 //increase timer and check if round is over
                 timer -= Time.deltaTime;
 
@@ -208,7 +207,7 @@ public class SceneManager : MonoBehaviour {
     /// <param name="one">true when players are on their origional sides</param>
     private void SetPlayers()
     {
-        if (positionsAreSwapped)
+        if (positionsGetSwapped)
         {
             playerOne.transform.position = startPositionTwo;
             playerTwo.transform.position = startPositionOne;
@@ -218,7 +217,7 @@ public class SceneManager : MonoBehaviour {
             playerOne.transform.position = startPositionOne;
             playerTwo.transform.position = startPositionTwo;
         }
-        positionsAreSwapped = !positionsAreSwapped;
+        positionsGetSwapped = !positionsGetSwapped;
     }
 
     private void BeginPickingPhase()
@@ -277,15 +276,22 @@ public class SceneManager : MonoBehaviour {
         state = GameState.survival;
     }
 
-    void HandlePlayerTrapCollisions()
+    private void HandlePlayerTrapCollisions()
     {
         foreach (GameObject trap in traps)
         {
             if (playerOne.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds))
             {
-                playerOneHealth--;
-                Debug.Log(playerOneHealth);
+                playerOne.GetComponent<Player>().currentHealth--;
+                Debug.Log("Player 1 hit");
+            }
+
+            if (playerOne.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds))
+            {
+                playerTwo.GetComponent<Player>().currentHealth--;
+                Debug.Log("Player 2 hit");
             }
         }
+        Debug.Log("Ran trap stuff");
     }
 }
