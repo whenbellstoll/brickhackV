@@ -10,6 +10,10 @@ public class UIManager : MonoBehaviour
 
     public SceneManager manager;
 
+
+    [SerializeField] private Digit[] roundDigits;
+    public int roundNumber = 0;
+
     private void Awake()
     {
         manager = FindObjectOfType<SceneManager>();
@@ -57,5 +61,10 @@ public class UIManager : MonoBehaviour
             playerOneHearts[h].SetBool("Solid", manager.playerOneHealth > h);
             playerTwoHearts[h].SetBool("Solid", manager.playerTwoHealth > h);
         }
+
+        roundDigits[1].SetSprite(Mathf.FloorToInt(roundNumber % 10));
+
+        roundDigits[0].gameObject.SetActive(roundNumber >= 10);
+        roundDigits[0].SetSprite(Mathf.FloorToInt((roundNumber % 100) / 10));
     }
 }
