@@ -83,7 +83,6 @@ public class SceneManager : MonoBehaviour {
                     timer = buildTime;
                     state = GameState.building;
                     BeginBuildPhase();
-                    BeginBuildPhase();                    
                 }
                 break;
             case GameState.building:
@@ -167,6 +166,9 @@ public class SceneManager : MonoBehaviour {
         p1Cursor = Instantiate(cursorPrefab);
         p2Cursor = Instantiate(cursorPrefab);
 
+        p1Cursor.GetComponent<SpriteRenderer>().color = Color.blue;
+        p2Cursor.GetComponent<SpriteRenderer>().color = Color.red;
+
         p1Cursor.transform.position = new Vector3(playerOne.transform.position.x, playerOne.transform.position.y + 10, 0);
         p2Cursor.transform.position = new Vector3(playerTwo.transform.position.x, playerTwo.transform.position.y + 10, 0);
 
@@ -182,13 +184,18 @@ public class SceneManager : MonoBehaviour {
         p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[Random.Range(0, platformPrefabs.Count)], p1Cursor.transform);
         p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[Random.Range(0, platformPrefabs.Count)], p2Cursor.transform);
         state = GameState.building;
-        //p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[Random.Range(0, platformPrefabs.Count)], p2Cursor.transform);
     }
 
     private void BeginSurvivalPhase()
     {
         Destroy(p1Cursor);
         Destroy(p2Cursor);
+
+        for(int i = 0; i < newPlatforms.Count; i++)
+        {
+            Destroy(newPlatforms[i]);
+        }
+        newPlatforms.Clear();
 
         playerOne.GetComponent<Player>().enabled = true;
         playerTwo.GetComponent<Player>().enabled = true;

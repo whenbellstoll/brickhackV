@@ -57,8 +57,6 @@ public class Player : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
-        
-
         position = transform.position;
         myBody = gameObject.GetComponent<Rigidbody2D>();
         sprite = gameObject.GetComponent<SpriteRenderer>();
