@@ -82,13 +82,10 @@ public class SceneManager : MonoBehaviour {
                 if(timer <= 0)
                 {
                     timer = buildTime;
-<<<<<<< HEAD
                     state = GameState.building;
                     BeginBuildPhase();
                     Debug.Log(state);
-=======
                     BeginBuildPhase();                    
->>>>>>> d1cea1255f2c86460550912c4ef886577faf7c2f
                 }
                 break;
             case GameState.building:
