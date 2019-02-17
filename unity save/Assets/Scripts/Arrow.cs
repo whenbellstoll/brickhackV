@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 public class Arrow : MonoBehaviour {
 
-    [SerializeField] private Vector2 velocity;
+    [SerializeField] public Vector2 velocity;
 
     private void Update()
     {
