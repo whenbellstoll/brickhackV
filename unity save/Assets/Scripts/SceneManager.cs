@@ -64,8 +64,8 @@ public class SceneManager : MonoBehaviour {
         state = GameState.picking;
         BeginPickingPhase();
 
-        playerOneHealth = playerHealth;
-        playerTwoHealth = playerHealth;
+        playerOneHealth = playerOne.GetComponent<Player>().currentHealth;
+        playerTwoHealth = playerTwo.GetComponent<Player>().currentHealth;
     }
 
 	void Update () {
@@ -123,8 +123,6 @@ public class SceneManager : MonoBehaviour {
 
                 timerDigits[1].SetSprite(Mathf.FloorToInt(timer % 10));
                 timerDigits[0].SetSprite(Mathf.FloorToInt((timer % 100) / 10));
-
-                HandlePlayerTrapCollisions();
 
                 //increase timer and check if round is over
                 timer -= Time.deltaTime;
@@ -213,17 +211,5 @@ public class SceneManager : MonoBehaviour {
         SetPlayers();
 
         state = GameState.survival;
-    }
-
-    void HandlePlayerTrapCollisions()
-    {
-        foreach (GameObject trap in traps)
-        {
-            if (playerOne.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds))
-            {
-                playerOneHealth--;
-                Debug.Log(playerOneHealth);
-            }
-        }
     }
 }

@@ -321,17 +321,6 @@ public class Player : MonoBehaviour
         myBody.MovePosition(transform.position + velocity * Time.deltaTime);
     }
 
-
-   
-
-    /// <summary>
-    /// Causes the player to take damage
-    /// </summary>
-    public void TakeDamage()
-    {
-        
-    }
-
     /// <summary>
     /// Calculates the vector between the player's position and the mouse position
     /// Normalizes it and returns it as a direction vector
