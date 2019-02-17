@@ -47,6 +47,8 @@ public class SceneManager : MonoBehaviour {
     List<GameObject> platforms = new List<GameObject>();
     List<GameObject> newPlatforms = new List<GameObject>();
 
+    List<GameObject> traps = new List<GameObject>();
+
     private void Awake()
     {
         ResetGame();
@@ -79,6 +81,8 @@ public class SceneManager : MonoBehaviour {
                 if(timer <= 0)
                 {
                     timer = buildTime;
+                    state = GameState.building;
+                    BeginBuildPhase();
                     BeginBuildPhase();                    
                 }
                 break;
@@ -115,9 +119,13 @@ public class SceneManager : MonoBehaviour {
 
                 break;
             case GameState.survival:
+                p1Cursor = null;
+                p2Cursor = null;
 
                 timerDigits[1].SetSprite(Mathf.FloorToInt(timer % 10));
                 timerDigits[0].SetSprite(Mathf.FloorToInt((timer % 100) / 10));
+
+                HandlePlayerTrapCollisions();
 
                 //increase timer and check if round is over
                 timer -= Time.deltaTime;
@@ -188,5 +196,17 @@ public class SceneManager : MonoBehaviour {
         SetPlayers();
 
         state = GameState.survival;
+    }
+
+    void HandlePlayerTrapCollisions()
+    {
+        foreach (GameObject trap in traps)
+        {
+            if (playerOne.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds))
+            {
+                playerOneHealth--;
+                Debug.Log(playerOneHealth);
+            }
+        }
     }
 }
