@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour {
 
     [SerializeField] private string gameScene;
+    [SerializeField] private string instructionsScene;
 	
 	// Update is called once per frame
 	void Update () {
@@ -13,5 +14,11 @@ public class MainMenu : MonoBehaviour {
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(gameScene, LoadSceneMode.Single);
         }
-	}
+
+        if (Input.GetKeyDown("joystick 1 button 1") || Input.GetKeyDown("joystick 2 button 1") || Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(instructionsScene, LoadSceneMode.Single);
+        }
+
+    }
 }
