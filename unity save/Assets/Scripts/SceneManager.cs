@@ -172,6 +172,16 @@ public class SceneManager : MonoBehaviour {
         p1Cursor.transform.position = new Vector3(playerOne.transform.position.x, playerOne.transform.position.y + 10, 0);
         p2Cursor.transform.position = new Vector3(playerTwo.transform.position.x, playerTwo.transform.position.y + 10, 0);
 
+        if(p1Cursor.transform.position.x < 0 )
+        {
+            p1Cursor.AddComponent<LeftCursorBounds>();
+            p2Cursor.AddComponent<RightCursorBounds>();
+        }
+        else
+        {
+            p1Cursor.AddComponent<RightCursorBounds>();
+            p2Cursor.AddComponent<LeftCursorBounds>();
+        }
         p1Cursor.GetComponent<ControlWithJoystick>().controllerNum = 1;
         p2Cursor.GetComponent<ControlWithJoystick>().controllerNum = 2;
 
