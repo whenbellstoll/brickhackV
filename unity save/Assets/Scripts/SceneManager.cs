@@ -56,6 +56,10 @@ public class SceneManager : MonoBehaviour {
 
     public static List<GameObject> traps = new List<GameObject>();
 
+    [SerializeField] private AudioSource audioPlayer;
+    [SerializeField] private AudioSource winAnnoucer;
+    [SerializeField] private List<AudioClip> audioClips = new List<AudioClip>();
+
     int itemindexOne;
     int itemindexTwo; //Keeps track of which items the players want to set down.
 
@@ -423,10 +427,14 @@ public class SceneManager : MonoBehaviour {
         winText.GetComponent<SpriteRenderer>().enabled = true;
         if(playerOneHealth <= 0)
         {
+            winAnnoucer.clip = audioClips[7];
+            winAnnoucer.Play(44100);
             winText.GetComponent<SpriteRenderer>().sprite = winRed;
         }
         else
         {
+            winAnnoucer.clip = audioClips[6];
+            winAnnoucer.Play(44100);
             winText.GetComponent<SpriteRenderer>().sprite = winBlue;
         }
     }
@@ -439,12 +447,16 @@ public class SceneManager : MonoBehaviour {
             {
                 if (playerOne.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds) && hurtTimerOne <= 0)
                 {
+                    audioPlayer.clip = audioClips[playerOneHealth - 1];
+                    audioPlayer.Play();
                     playerOne.GetComponent<Player>().currentHealth--;
                     hurtTimerOne = 60;
                 }
 
                 if (playerTwo.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds) && hurtTimerTwo <= 0)
                 {
+                    audioPlayer.clip = audioClips[playerTwoHealth + 2];
+                    audioPlayer.Play();
                     playerTwo.GetComponent<Player>().currentHealth--;
                     hurtTimerTwo = 60;
                 }
