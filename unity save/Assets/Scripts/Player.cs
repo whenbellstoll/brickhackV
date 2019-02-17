@@ -97,7 +97,36 @@ public class Player : MonoBehaviour
             ApplyForce(new Vector2(-maxVelocity, 0));
             facingLeft = true;
         }
-        
+        else
+        {
+            if (horizontal == "C1Horizontal")
+            {
+                if (Input.GetKey(KeyCode.D))
+                {
+                    ApplyForce(new Vector2(maxVelocity, 0));
+                    facingLeft = false;
+                }
+                else if (Input.GetKey(KeyCode.A))
+                {
+                    ApplyForce(new Vector2(-maxVelocity, 0));
+                    facingLeft = true;
+                }
+            }
+            else
+            {
+                if (Input.GetKey(KeyCode.RightArrow))
+                {
+                    ApplyForce(new Vector2(maxVelocity, 0));
+                    facingLeft = false;
+                }
+                else if (Input.GetKey(KeyCode.LeftArrow))
+                {
+                    ApplyForce(new Vector2(-maxVelocity, 0));
+                    facingLeft = true;
+                }
+            }
+        }
+
 
 
         if (rolling)
@@ -131,9 +160,27 @@ public class Player : MonoBehaviour
             ApplyForce(new Vector2(0, jumpSpeed));
             // falling = true;
         }
+        else 
+        {
+            if (jump == "C1Jump")
+            {
+                if(Input.GetKeyDown(KeyCode.W) && !falling)
+                {
+                    ApplyForce(new Vector2(0, jumpSpeed));
+                }
+            }
+            else
+            {
+                if(Input.GetKeyDown(KeyCode.UpArrow) && !falling)
+                {
+                    ApplyForce(new Vector2(0, jumpSpeed));
+                }
+            }
 
-        // Checks if grounded
-        ground = IsGrounded();
+        }
+
+            // Checks if grounded
+            ground = IsGrounded();
         
         // If the player is above a certain point, start fallign
         if (ground.distance >= .1f || ground.collider == null)
