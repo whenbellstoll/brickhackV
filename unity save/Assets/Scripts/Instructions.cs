@@ -14,7 +14,7 @@ public class Instructions : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKeyDown("joystick 1 button 3") || Input.GetKeyDown("joystick 2 button 3") || Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown("joystick 1 button 1") || Input.GetKeyDown("joystick 2 button 1") || Input.GetKeyDown(KeyCode.I))
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(menuScene, LoadSceneMode.Single);
         }
