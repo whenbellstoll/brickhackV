@@ -166,7 +166,7 @@ public class SceneManager : MonoBehaviour {
     private void BeginBuildPhase()
     {
         p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[Random.Range(0, platformPrefabs.Count)], p1Cursor.transform);
-        Debug.Log("Istantiated Platform Clone");
+        p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[Random.Range(0, platformPrefabs.Count)], p2Cursor.transform);
         state = GameState.building;
         //p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[Random.Range(0, platformPrefabs.Count)], p2Cursor.transform);
     }
