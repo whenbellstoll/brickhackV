@@ -73,8 +73,10 @@ public class Player : MonoBehaviour
 
 
         angle = Mathf.Atan2(playerToMouse.y, playerToMouse.x);
-
-
+        //Set Animation
+        animation.SetFloat("xVelocity", velocity.x);
+        animation.SetFloat("yVelocity", velocity.y);
+        animation.SetBool("grounded", !falling);
 
         if (currentHealth <= 0)
         {
