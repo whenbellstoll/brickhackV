@@ -22,6 +22,8 @@ public class SceneManager : MonoBehaviour {
     [SerializeField] private Vector2 startPositionOne;
     [SerializeField] private Vector2 startPositionTwo;
 
+    bool positionsAreSwapped = false;
+
     [SerializeField] private float pickTime;
     [SerializeField] private float buildTime;
     [SerializeField] private float roundTime;
@@ -44,7 +46,8 @@ public class SceneManager : MonoBehaviour {
     [SerializeField] List<GameObject> platformPrefabs;
     List<GameObject> platforms = new List<GameObject>();
     List<GameObject> newPlatforms = new List<GameObject>();
-    bool buildingComplete = false;
+
+    List<GameObject> traps = new List<GameObject>();
 
     private void Awake()
     {
@@ -60,7 +63,6 @@ public class SceneManager : MonoBehaviour {
 
         state = GameState.picking;
         BeginPickingPhase();
-        SetPlayers(state); //players start on their own side
 
         playerOneHealth = playerHealth;
         playerTwoHealth = playerHealth;
@@ -79,7 +81,8 @@ public class SceneManager : MonoBehaviour {
                 if(timer <= 0)
                 {
                     timer = buildTime;
-                    BeginBuildPhase();                    
+                    state = GameState.building;
+                    BeginBuildPhase();
                 }
                 break;
             case GameState.building:
@@ -92,11 +95,18 @@ public class SceneManager : MonoBehaviour {
                 }
 
                 //this will all be changed when we start differentaiting between controllers
-                if (Input.GetKeyDown("joystick button 0"))
+                if (Input.GetKeyDown("joystick 1 button 0"))
                 {
                     p1Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
                     platforms.Add(p1Cursor.GetComponent<StoreObjectToBuild>().obj);
                     p1Cursor.GetComponent<StoreObjectToBuild>().obj = null;
+                }
+
+                if(Input.GetKeyDown("joystick 2 button 0"))
+                {
+                    p2Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
+                    platforms.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
+                    p2Cursor.GetComponent<StoreObjectToBuild>().obj = null;
                 }
 
                 timer -= Time.deltaTime;
@@ -104,14 +114,17 @@ public class SceneManager : MonoBehaviour {
                 if (timer <= 0) {
                     timer = roundTime;
                     BeginSurvivalPhase();
-                    SetPlayers(state); //place players on opponents side   
                 }
 
                 break;
             case GameState.survival:
+                p1Cursor = null;
+                p2Cursor = null;
 
                 timerDigits[1].SetSprite(Mathf.FloorToInt(timer % 10));
                 timerDigits[0].SetSprite(Mathf.FloorToInt((timer % 100) / 10));
+
+                HandlePlayerTrapCollisions();
 
                 //increase timer and check if round is over
                 timer -= Time.deltaTime;
@@ -122,7 +135,6 @@ public class SceneManager : MonoBehaviour {
 
                     state = GameState.picking;
                     BeginPickingPhase();
-                    SetPlayers(state); //return players to own side
                 }                
 
                 break;
@@ -134,27 +146,31 @@ public class SceneManager : MonoBehaviour {
     /// sets the players position
     /// </summary>
     /// <param name="one">true when players are on their origional sides</param>
-    private void SetPlayers(GameState state)
+    private void SetPlayers()
     {
-        switch (state)
+        if (positionsAreSwapped)
         {
-            case GameState.building:
-                playerOne.transform.position = startPositionOne;
-                playerTwo.transform.position = startPositionTwo;
-                break;
-            case GameState.survival:
-                playerOne.transform.position = startPositionTwo;
-                playerTwo.transform.position = startPositionOne;
-                break;
-
+            playerOne.transform.position = startPositionTwo;
+            playerTwo.transform.position = startPositionOne;
         }
-           
+        else
+        {
+            playerOne.transform.position = startPositionOne;
+            playerTwo.transform.position = startPositionTwo;
+        }
+        positionsAreSwapped = !positionsAreSwapped;
     }
 
     private void BeginPickingPhase()
     {
         p1Cursor = Instantiate(cursorPrefab);
         p2Cursor = Instantiate(cursorPrefab);
+
+        p1Cursor.GetComponent<SpriteRenderer>().color = Color.blue;
+        p2Cursor.GetComponent<SpriteRenderer>().color = Color.red;
+
+        p1Cursor.transform.position = new Vector3(playerOne.transform.position.x, playerOne.transform.position.y + 10, 0);
+        p2Cursor.transform.position = new Vector3(playerTwo.transform.position.x, playerTwo.transform.position.y + 10, 0);
 
         p1Cursor.GetComponent<ControlWithJoystick>().controllerNum = 1;
         p2Cursor.GetComponent<ControlWithJoystick>().controllerNum = 2;
@@ -166,9 +182,8 @@ public class SceneManager : MonoBehaviour {
     private void BeginBuildPhase()
     {
         p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[Random.Range(0, platformPrefabs.Count)], p1Cursor.transform);
-        Debug.Log("Istantiated Platform Clone");
+        p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[Random.Range(0, platformPrefabs.Count)], p2Cursor.transform);
         state = GameState.building;
-        //p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[Random.Range(0, platformPrefabs.Count)], p2Cursor.transform);
     }
 
     private void BeginSurvivalPhase()
@@ -176,9 +191,29 @@ public class SceneManager : MonoBehaviour {
         Destroy(p1Cursor);
         Destroy(p2Cursor);
 
+        for(int i = 0; i < newPlatforms.Count; i++)
+        {
+            Destroy(newPlatforms[i]);
+        }
+        newPlatforms.Clear();
+
         playerOne.GetComponent<Player>().enabled = true;
         playerTwo.GetComponent<Player>().enabled = true;
 
+        SetPlayers();
+
         state = GameState.survival;
+    }
+
+    void HandlePlayerTrapCollisions()
+    {
+        foreach (GameObject trap in traps)
+        {
+            if (playerOne.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds))
+            {
+                playerOneHealth--;
+                Debug.Log(playerOneHealth);
+            }
+        }
     }
 }

@@ -53,13 +53,10 @@ public class Player : MonoBehaviour
         QualitySettings.vSyncCount = 1;
         horizontal = "C" + controllerNumber + "Horizontal";
         jump = "C" + controllerNumber + "Jump";
-        Debug.Log(horizontal);
     }
 	// Use this for initialization
 	void Start ()
     {
-        
-
         position = transform.position;
         myBody = gameObject.GetComponent<Rigidbody2D>();
         sprite = gameObject.GetComponent<SpriteRenderer>();
@@ -129,7 +126,7 @@ public class Player : MonoBehaviour
         }
 
         //jump
-        if (Input.GetKey("joystick button 0") && !falling)
+        if (Input.GetAxis(jump) > 0 && !falling)
         {
             ApplyForce(new Vector2(0, jumpSpeed));
             // falling = true;
