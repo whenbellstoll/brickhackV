@@ -55,6 +55,7 @@ public class SceneManager : MonoBehaviour {
 
     int hurtTimerOne = 0;
     int hurtTimerTwo = 0;
+    public static bool heartsPositionCorrect = true;
     private void Awake()
     {
         ResetGame();
@@ -273,6 +274,7 @@ public class SceneManager : MonoBehaviour {
             playerTwo.transform.position = startPositionTwo;
         }
         positionsGetSwapped = !positionsGetSwapped;
+        heartsPositionCorrect = false;
     }
 
     private void BeginPickingPhase()
