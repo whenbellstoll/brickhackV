@@ -5,6 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] int controllerNumber;
+    string horizontal;
+    string jump;
+
     public Animator animation;
     public Rigidbody2D myBody;              //players rigidBody
     public BoxCollider2D box;               // Player's box collider
@@ -47,6 +51,8 @@ public class Player : MonoBehaviour
     void Awake()
     {
         QualitySettings.vSyncCount = 1;
+        horizontal = "C" + controllerNumber + "Horizontal";
+        jump = "C" + controllerNumber + "Jump";
     }
 	// Use this for initialization
 	void Start ()
@@ -81,14 +87,14 @@ public class Player : MonoBehaviour
 
         
         // moving right
-        if (Input.GetAxis("Horizontal") > 0.35f)
+        if (Input.GetAxis(horizontal) > 0.35f)
         {
             ApplyForce(new Vector2(maxVelocity, 0));
             facingLeft = false;
         }
 
         // moving left
-        if (Input.GetAxis("Horizontal") < -0.35f)
+        if (Input.GetAxis(horizontal) < -0.35f)
         {
             ApplyForce(new Vector2(-maxVelocity, 0));
             facingLeft = true;
@@ -122,7 +128,7 @@ public class Player : MonoBehaviour
         }
 
         //jump
-        if (Input.GetKey("joystick button 0") && !falling)
+        if (Input.GetAxis(jump) > 0 && !falling)
         {
             ApplyForce(new Vector2(0, jumpSpeed));
             // falling = true;
