@@ -49,9 +49,14 @@ public class SceneManager : MonoBehaviour {
 
     List<GameObject> traps = new List<GameObject>();
 
+    int itemindexOne;
+    int itemindexTwo; //Keeps track of which items the players want to set down.
+
     private void Awake()
     {
         ResetGame();
+        itemindexOne = 0;
+        itemindexTwo = 0;
     }
 
     /// <summary>
@@ -109,6 +114,61 @@ public class SceneManager : MonoBehaviour {
                     p2Cursor.GetComponent<StoreObjectToBuild>().obj = null;
                 }
 
+
+
+                //Next four ifs change the prefab the players select.
+                if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null) //Gross, dispicable flag check, but nonetheless necessary
+                {
+
+
+                    if (Input.GetKeyDown("joystick 1 button 4"))
+                    {
+                        itemindexOne--;
+                        if (itemindexOne < 0)
+                        {
+                            itemindexOne = platformPrefabs.Count - 1;
+                        }
+                        GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
+                        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[itemindexOne], p1Cursor.transform);
+                        Destroy(temp);
+                    }
+
+                    if (Input.GetKeyDown("joystick 1 button 5"))
+                    {
+                        itemindexOne++;
+                        if (itemindexOne >= platformPrefabs.Count)
+                        {
+                            itemindexOne = 0;
+                        }
+                        GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
+                        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[itemindexOne], p1Cursor.transform);
+                        Destroy(temp);
+                    }
+
+                    if (Input.GetKeyDown("joystick 2 button 4"))
+                    {
+                        itemindexTwo--;
+                        if (itemindexTwo < 0)
+                        {
+                            itemindexTwo = platformPrefabs.Count - 1;
+                        }
+                        GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
+                        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[itemindexTwo], p1Cursor.transform);
+                        Destroy(temp);
+                    }
+
+                    if (Input.GetKeyDown("joystick 2 button 5"))
+                    {
+                        itemindexTwo++;
+                        if (itemindexTwo >= platformPrefabs.Count)
+                        {
+                            itemindexTwo = 0;
+                        }
+                        GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
+                        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[itemindexTwo], p1Cursor.transform);
+                        Destroy(temp);
+                    }
+                }
                 timer -= Time.deltaTime;
 
                 if (timer <= 0) {
@@ -191,8 +251,10 @@ public class SceneManager : MonoBehaviour {
 
     private void BeginBuildPhase()
     {
-        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[Random.Range(0, platformPrefabs.Count)], p1Cursor.transform);
-        p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[Random.Range(0, platformPrefabs.Count)], p2Cursor.transform);
+        itemindexOne = 0;
+        itemindexTwo = 0;
+        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[0], p1Cursor.transform);
+        p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(platformPrefabs[0], p2Cursor.transform);
         state = GameState.building;
     }
 
