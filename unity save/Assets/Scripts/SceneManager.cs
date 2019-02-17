@@ -66,6 +66,22 @@ public class SceneManager : MonoBehaviour {
     int hurtTimerOne = 0;
     int hurtTimerTwo = 0;
     public static bool heartsPositionCorrect = true;
+
+
+    public GameObject roundUI;
+    public int roundNumber = 1;
+
+    public int GetState()
+    {
+        switch (state)
+        {
+            case GameState.picking: return 0; 
+            case GameState.building: return 1;
+            case GameState.survival: return 2;
+        }
+        return 2;
+    }
+
     private void Awake()
     {
         ResetGame();
@@ -78,6 +94,8 @@ public class SceneManager : MonoBehaviour {
     /// </summary>
     public void ResetGame()
     {
+        roundNumber = 1;
+
         winText.GetComponent<SpriteRenderer>().enabled = false;
         timer = pickTime;
         playerOne.GetComponent<Player>().currentHealth = playerOne.GetComponent<Player>().baseHealth;
@@ -97,6 +115,7 @@ public class SceneManager : MonoBehaviour {
         LoadInitialLevel();
 
         state = GameState.picking;
+        roundUI.SetActive(true);
         BeginPickingPhase();
     }
 
@@ -276,7 +295,7 @@ public class SceneManager : MonoBehaviour {
                 if (timer <= 0)
                 {
                     timer = pickTime; //reset the timer
-
+                    roundNumber++;
                     state = GameState.picking;
                     BeginPickingPhase();
                 }
@@ -340,6 +359,7 @@ public class SceneManager : MonoBehaviour {
 
     private void BeginPickingPhase()
     {
+        roundUI.SetActive(true);
         p1Cursor = Instantiate(cursorPrefab);
         p2Cursor = Instantiate(cursorPrefab);
 
@@ -381,7 +401,8 @@ public class SceneManager : MonoBehaviour {
 
     private void BeginSurvivalPhase()
     {
-        if(p1Cursor.GetComponent<StoreObjectToBuild>().obj != null)
+        roundUI.SetActive(false);
+        if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null)
         {
             if (p1Cursor.GetComponent<StoreObjectToBuild>().obj.tag == "Platform")
             {
@@ -432,6 +453,7 @@ public class SceneManager : MonoBehaviour {
 
     private void BeginWinPhase()
     {
+        roundUI.SetActive(false);
         state = GameState.win;
         timer = winTime;
         winText.GetComponent<SpriteRenderer>().enabled = true;

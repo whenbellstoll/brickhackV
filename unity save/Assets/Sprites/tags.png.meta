@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3e710b363ca988c479d4a4f0d55082b9
+guid: e8d112d65dffe4947b9a3a0e7d4683b8
 TextureImporter:
   fileIDToRecycleName:
     21300000: tags_0
@@ -91,9 +91,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 110
-        width: 302
-        height: 48
+        y: 80
+        width: 240
+        height: 40
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -101,7 +101,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3ba04826c28b0474db50e3cf106d5af9
+      spriteID: 73aa384b8d5b69a428ff69661ae4d134
       vertices: []
       indices: 
       edges: []
@@ -111,9 +111,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 62
-        width: 302
-        height: 48
+        y: 40
+        width: 240
+        height: 40
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -121,7 +121,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 75a24d72cf4b4864abc866aedecfb475
+      spriteID: f21dcddee0d39844cbf9e31608bdf360
       vertices: []
       indices: 
       edges: []
@@ -131,9 +131,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 14
-        width: 302
-        height: 48
+        y: 0
+        width: 240
+        height: 40
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,7 +141,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 058fae053ff32084c9b20b226110be25
+      spriteID: 82d5c1394b76faa4488d1888a0313fe0
       vertices: []
       indices: 
       edges: []
@@ -149,7 +149,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 7fb3cddfe84c8e6458f78f06bb05fe55
+    spriteID: 1ee6d4b541ea3ea4abca04569a661797
     vertices: []
     indices: 
     edges: []
