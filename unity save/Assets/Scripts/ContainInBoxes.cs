@@ -22,6 +22,15 @@ public class ContainInBoxes : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        xPos = transform.position.x;
+        if (xPos < 0)
+        {
+            inLeft = true;
+        }
+        else
+        {
+            inLeft = false;
+        }
         if (inLeft)
         {
             if (transform.position.x > -1.3f)

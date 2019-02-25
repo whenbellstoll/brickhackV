@@ -189,7 +189,7 @@ public class Player : MonoBehaviour
             ground = IsGrounded();
         
         // If the player is above a certain point, start fallign
-        if (ground.distance >= .1f || ground.collider == null)
+        if ((ground.distance >= .1f || ground.collider == null) )
         {
             falling = true;
         }
@@ -201,6 +201,7 @@ public class Player : MonoBehaviour
             //animation
             velocity.y = 0;
         }
+        
 
         // Falling
         if(falling)
