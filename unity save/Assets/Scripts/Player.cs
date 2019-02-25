@@ -375,6 +375,11 @@ public class Player : MonoBehaviour
         myBody.MovePosition(transform.position + velocity * Time.deltaTime);
     }
 
+    public void ResetHealth()
+    {
+        currentHealth = baseHealth;
+    }
+
     /// <summary>
     /// Calculates the vector between the player's position and the mouse position
     /// Normalizes it and returns it as a direction vector
