@@ -4,7 +4,6 @@ using UnityEngine;
 
 public enum GameState
 {
-    picking,
     building,
     survival,
     win
@@ -25,7 +24,6 @@ public class SceneManager : MonoBehaviour {
 
     bool positionsGetSwapped = true;
 
-    [SerializeField] private float pickTime;
     [SerializeField] private float buildTime;
     [SerializeField] private float roundTime;
     [SerializeField] private float winTime;
@@ -75,7 +73,6 @@ public class SceneManager : MonoBehaviour {
     {
         switch (state)
         {
-            case GameState.picking: return 0; 
             case GameState.building: return 1;
             case GameState.survival: return 2;
         }
@@ -97,7 +94,7 @@ public class SceneManager : MonoBehaviour {
         roundNumber = 1;
 
         winText.GetComponent<SpriteRenderer>().enabled = false;
-        timer = pickTime;
+        timer = buildTime;
         playerOne.GetComponent<Player>().currentHealth = playerOne.GetComponent<Player>().baseHealth;
         playerTwo.GetComponent<Player>().currentHealth = playerTwo.GetComponent<Player>().baseHealth;
 
@@ -114,9 +111,9 @@ public class SceneManager : MonoBehaviour {
 
         LoadInitialLevel();
 
-        state = GameState.picking;
+        state = GameState.building;
         roundUI.SetActive(true);
-        BeginPickingPhase();
+        BeginBuildPhase();
     }
 
 	void Update () {
@@ -128,79 +125,11 @@ public class SceneManager : MonoBehaviour {
         //heartTest.GetComponent<Animator>().SetBool("Solid", false);
 
         switch (state){
-            case GameState.picking:
-                timerDigits[1].SetSprite(Mathf.FloorToInt(timer % 10));
-                timerDigits[0].SetSprite(Mathf.FloorToInt((timer % 100) / 10));
-
-                timer -= Time.deltaTime;
-                if(timer <= 0)
-                {
-                    timer = buildTime;
-                    state = GameState.building;
-                    BeginBuildPhase();
-                }
-
-                //Next four ifs change the prefab the players select.
-                if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null) //Gross, dispicable flag check, but nonetheless necessary
-                {
-
-
-                    if (Input.GetKeyDown("joystick 1 button 4") || Input.GetKeyDown(KeyCode.Q))
-                    {
-                        itemindexOne--;
-                        if (itemindexOne < 0)
-                        {
-                            itemindexOne = buildables.Count - 1;
-                        }
-                        GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
-                        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemindexOne], p1Cursor.transform);
-                        Destroy(temp);
-                    }
-
-                    if (Input.GetKeyDown("joystick 1 button 5") || Input.GetKeyDown(KeyCode.E))
-                    {
-                        itemindexOne++;
-                        if (itemindexOne >= buildables.Count)
-                        {
-                            itemindexOne = 0;
-                        }
-                        GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
-                        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemindexOne], p1Cursor.transform);
-                        Destroy(temp);
-                    }
-
-                    if (Input.GetKeyDown("joystick 2 button 4") || Input.GetKeyDown(KeyCode.RightControl))
-                    {
-                        itemindexTwo--;
-                        if (itemindexTwo < 0)
-                        {
-                            itemindexTwo = buildables.Count - 1;
-                        }
-                        GameObject temp = p2Cursor.GetComponent<StoreObjectToBuild>().obj;
-                        p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemindexTwo], p1Cursor.transform);
-                        Destroy(temp);
-                    }
-
-                    if (Input.GetKeyDown("joystick 2 button 5") || Input.GetKeyDown(KeyCode.Insert))
-                    {
-                        itemindexTwo++;
-                        if (itemindexTwo >= buildables.Count)
-                        {
-                            itemindexTwo = 0;
-                        }
-                        GameObject temp = p2Cursor.GetComponent<StoreObjectToBuild>().obj;
-                        p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemindexTwo], p1Cursor.transform);
-                        Destroy(temp);
-                    }
-                }
-                if (playerOneHealth <= 0 || playerTwoHealth <= 0)
-                {
-                    BeginWinPhase();
-                }
-                break;
             case GameState.building:
                 timerDigits[1].SetSprite(Mathf.FloorToInt(timer % 10));
                 timerDigits[0].SetSprite(Mathf.FloorToInt((timer % 100) / 10));
+
+                HandleSelectionChanging();
 
                 timer -= Time.deltaTime;
 
@@ -294,10 +223,10 @@ public class SceneManager : MonoBehaviour {
 
                 if (timer <= 0)
                 {
-                    timer = pickTime; //reset the timer
+                    timer = buildTime; //reset the timer
                     roundNumber++;
-                    state = GameState.picking;
-                    BeginPickingPhase();
+                    state = GameState.building;
+                    BeginBuildPhase();
                 }
                 if (playerOneHealth <= 0 || playerTwoHealth <= 0)
                 {
@@ -396,7 +325,65 @@ public class SceneManager : MonoBehaviour {
 
     private void BeginBuildPhase()
     {
+        BeginPickingPhase();
         state = GameState.building;
+    }
+
+    private void HandleSelectionChanging()
+    {
+        //Next four ifs change the prefab the players select.
+        if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null) //Gross, dispicable flag check, but nonetheless necessary
+        {
+
+
+            if (Input.GetKeyDown("joystick 1 button 4") || Input.GetKeyDown(KeyCode.Q))
+            {
+                itemindexOne--;
+                if (itemindexOne < 0)
+                {
+                    itemindexOne = buildables.Count - 1;
+                }
+                GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
+                p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemindexOne], p1Cursor.transform);
+                Destroy(temp);
+            }
+
+            if (Input.GetKeyDown("joystick 1 button 5") || Input.GetKeyDown(KeyCode.E))
+            {
+                itemindexOne++;
+                if (itemindexOne >= buildables.Count)
+                {
+                    itemindexOne = 0;
+                }
+                GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
+                p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemindexOne], p1Cursor.transform);
+                Destroy(temp);
+            }
+
+            if (Input.GetKeyDown("joystick 2 button 4") || Input.GetKeyDown(KeyCode.RightControl))
+            {
+                itemindexTwo--;
+                if (itemindexTwo < 0)
+                {
+                    itemindexTwo = buildables.Count - 1;
+                }
+                GameObject temp = p2Cursor.GetComponent<StoreObjectToBuild>().obj;
+                p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemindexTwo], p1Cursor.transform);
+                Destroy(temp);
+            }
+
+            if (Input.GetKeyDown("joystick 2 button 5") || Input.GetKeyDown(KeyCode.Insert))
+            {
+                itemindexTwo++;
+                if (itemindexTwo >= buildables.Count)
+                {
+                    itemindexTwo = 0;
+                }
+                GameObject temp = p2Cursor.GetComponent<StoreObjectToBuild>().obj;
+                p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemindexTwo], p1Cursor.transform);
+                Destroy(temp);
+            }
+        }
     }
 
     private void BeginSurvivalPhase()
