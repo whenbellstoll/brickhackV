@@ -91,13 +91,19 @@ public class SceneManager : MonoBehaviour {
     /// </summary>
     public void ResetGame()
     {
+        //reset round count
         roundNumber = 1;
 
+        //Get rid of the red/blue wins
         winText.GetComponent<SpriteRenderer>().enabled = false;
+        //set the timer to the build time
         timer = buildTime;
+
+        //reset the health of the players.
         playerOne.GetComponent<Player>().currentHealth = playerOne.GetComponent<Player>().baseHealth;
         playerTwo.GetComponent<Player>().currentHealth = playerTwo.GetComponent<Player>().baseHealth;
 
+        //Destroy all traps and platforms previously placed
         for(int i = 0; i < platforms.Count; i++)
         {
             Destroy(platforms[i]);
@@ -111,98 +117,55 @@ public class SceneManager : MonoBehaviour {
 
         LoadInitialLevel();
 
+        //Set the phase to build
         state = GameState.building;
         roundUI.SetActive(true);
-        BeginBuildPhase();
+        BeginPickingPhase();
     }
 
 	void Update () {
+        //Looks at the players and the list, collides accordingly and sets health
         HandlePlayerTrapCollisions();
 
-        playerOneHealth = playerOne.GetComponent<Player>().currentHealth;
-        playerTwoHealth = playerTwo.GetComponent<Player>().currentHealth;
-
-        //heartTest.GetComponent<Animator>().SetBool("Solid", false);
-
-        switch (state){
+        //The main logic of the game
+        switch (state)
+        {
+            ///
+            /// BUILDING STATE
+            ///
             case GameState.building:
+                //Set the timer sprites.
                 timerDigits[1].SetSprite(Mathf.FloorToInt(timer % 10));
                 timerDigits[0].SetSprite(Mathf.FloorToInt((timer % 100) / 10));
 
+                //When the players want to change the item they're using, do it.
                 HandleSelectionChanging();
 
+                //decrease the timer by delta time
                 timer -= Time.deltaTime;
 
-                //foreach (Digit digit in timerDigits)
-                //{
-                //   digit.SetSprite(0);
-                //}
-
+                //The next two if statement place objects when the players press the appropriate buttons.
                 if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown(KeyCode.F))
                 {
-                    if (p1Cursor.GetComponent<StoreObjectToBuild>().obj.tag == "Platform")
-                    {
-                        p1Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
-                        platforms.Add(p1Cursor.GetComponent<StoreObjectToBuild>().obj);
-                        p1Cursor.GetComponent<StoreObjectToBuild>().obj = null;
-
-                        if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.RightShift))
-                        {
-                            audioPlayer.clip = audioClips[8];
-                            audioPlayer.Play();
-                        }
-                    }
-                    else
-                    {
-                        p1Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
-                        traps.Add(p1Cursor.GetComponent<StoreObjectToBuild>().obj);
-                        p1Cursor.GetComponent<StoreObjectToBuild>().obj = null;
-
-                        if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.RightShift))
-                        {
-                            audioPlayer.clip = audioClips[8];
-                            audioPlayer.Play();
-                        }
-                    }
+                    PlaceObject(p1Cursor);
                 }
 
                 if(Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.RightShift))
                 {
-                    if (p2Cursor.GetComponent<StoreObjectToBuild>().obj.tag == "Trap")
-                    {
-                        p2Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
-                        traps.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
-                        p2Cursor.GetComponent<StoreObjectToBuild>().obj = null;
-
-                        if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.RightShift))
-                        {
-                            audioPlayer.clip = audioClips[8];
-                            audioPlayer.Play();
-                        }
-                    }
-                    else
-                    {
-                        p2Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
-                        platforms.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
-                        p2Cursor.GetComponent<StoreObjectToBuild>().obj = null;
-
-                        if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.RightShift))
-                        {
-                            audioPlayer.clip = audioClips[8];
-                            audioPlayer.Play();
-                        }
-                    }
-                        
-                    
+                    PlaceObject(p2Cursor);
                 }
 
 
 
-
-                if (timer <= 0) {
+                //When the timer reaches 0, go to the survival phase.
+                if (timer <= 0)
+                {
                     timer = roundTime;
                     BeginSurvivalPhase();
                 }
+
+                //if one of the players has died (impossible in the build phase, but just a failsafe)
+                //go to the win phase.
                 if (playerOneHealth <= 0 || playerTwoHealth <= 0)
                 {
                     BeginWinPhase();
@@ -210,6 +173,10 @@ public class SceneManager : MonoBehaviour {
 
 
                 break;
+            
+            ///
+            /// SURVIVAL STATE
+            ///
             case GameState.survival:
                 p1Cursor = null;
                 p2Cursor = null;
@@ -224,9 +191,13 @@ public class SceneManager : MonoBehaviour {
                 if (timer <= 0)
                 {
                     timer = buildTime; //reset the timer
+                    //iterate the round number
                     roundNumber++;
+
+                    //change the game state to build
                     state = GameState.building;
-                    BeginBuildPhase();
+                    // Begins the item selection phase, brings the cursors into existence, creates the object the player can select from
+                    BeginPickingPhase();
                 }
                 if (playerOneHealth <= 0 || playerTwoHealth <= 0)
                 {
@@ -239,15 +210,19 @@ public class SceneManager : MonoBehaviour {
                     audioPlayer.Play();
                 }
                 break;
+
+            ///
+            ///WIN PHASE
+            ///
             case GameState.win:
+
                 timer -= Time.deltaTime;
-                Debug.Log(timer);
 
                 if (timer <= 0)
                 {
                     if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.RightShift))
                     {
-                        Debug.Log("reset button pressed");
+                       
                         ResetGame();
                     }
                 }
@@ -263,8 +238,36 @@ public class SceneManager : MonoBehaviour {
         {
             hurtTimerTwo--;
         }
-        Debug.Log(state);
+        
 	}
+
+
+    private void PlaceObject(GameObject cursor)
+    {
+        //if the object is a platform add it to platforms, if it's a trap add it to traps. 
+        if (cursor.GetComponent<StoreObjectToBuild>().obj.tag == "Platform")
+        {
+            cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
+            platforms.Add(cursor.GetComponent<StoreObjectToBuild>().obj);
+            cursor.GetComponent<StoreObjectToBuild>().obj = null;
+
+            //play placement audio
+            audioPlayer.clip = audioClips[8];
+            audioPlayer.Play();
+            
+        }
+        else
+        {
+            cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
+            traps.Add(cursor.GetComponent<StoreObjectToBuild>().obj);
+            cursor.GetComponent<StoreObjectToBuild>().obj = null;
+
+            //Play placement audio
+            audioPlayer.clip = audioClips[8];
+            audioPlayer.Play();
+            
+        }
+    }
 
     /// <summary>
     /// sets the players position
@@ -274,61 +277,70 @@ public class SceneManager : MonoBehaviour {
     {
         if (positionsGetSwapped)
         {
+            //Swap players to the other side
             playerOne.transform.position = startPositionTwo;
             playerTwo.transform.position = startPositionOne;
         }
         else
         {
+            //From the opposite side to their original starting positions.
             playerOne.transform.position = startPositionOne;
             playerTwo.transform.position = startPositionTwo;
         }
+        //Set the bool for the next round
         positionsGetSwapped = !positionsGetSwapped;
+
+        //This flag is jankily used to swap the heart positions
         heartsPositionCorrect = false;
     }
 
+    /// <summary>
+    /// Begins the item selection phase, brings the cursors into existence, creates the object the player can select from
+    /// </summary>
     private void BeginPickingPhase()
     {
+        //Pull up the round UI
         roundUI.SetActive(true);
+        
+        //Instantiate the cursors
         p1Cursor = Instantiate(cursorPrefab);
         p2Cursor = Instantiate(cursorPrefab);
 
+        //Set the appropriate color
         p1Cursor.GetComponent<SpriteRenderer>().color = Color.blue;
         p2Cursor.GetComponent<SpriteRenderer>().color = Color.red;
 
+        //Set their speed
         p1Cursor.GetComponent<ControlWithJoystick>().speed = 0.25f;
         p2Cursor.GetComponent<ControlWithJoystick>().speed = 0.25f;
 
+        //Set their position to the players plus ten
         p1Cursor.transform.position = new Vector3(playerOne.transform.position.x, playerOne.transform.position.y + 10, 0);
         p2Cursor.transform.position = new Vector3(playerTwo.transform.position.x, playerTwo.transform.position.y + 10, 0);
 
-        if(p1Cursor.transform.position.x < 0 )
-        {
-            p1Cursor.AddComponent<LeftCursorBounds>();
-            p2Cursor.AddComponent<RightCursorBounds>();
-        }
-        else
-        {
-            p1Cursor.AddComponent<RightCursorBounds>();
-            p2Cursor.AddComponent<LeftCursorBounds>();
-        }
+        //Keep the cursor in bounds
+        p1Cursor.AddComponent<ContainInBoxes>();
+        p2Cursor.AddComponent<ContainInBoxes>();
+        
+        //Control with Joy stick
         p1Cursor.GetComponent<ControlWithJoystick>().controllerNum = 1;
         p2Cursor.GetComponent<ControlWithJoystick>().controllerNum = 2;
 
+        //Players become disabled
         playerOne.GetComponent<Player>().enabled = false;
         playerTwo.GetComponent<Player>().enabled = false;
 
+        //Item indexes are reset
         itemindexOne = 0;
         itemindexTwo = 0;
+        //Get the item 
         p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[0], p1Cursor.transform);
         p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[0], p2Cursor.transform);
     }
 
-    private void BeginBuildPhase()
-    {
-        BeginPickingPhase();
-        state = GameState.building;
-    }
-
+    /// <summary>
+    /// Handles when the player changes the item they want to build
+    /// </summary>
     private void HandleSelectionChanging()
     {
         //Next four ifs change the prefab the players select.
@@ -338,28 +350,43 @@ public class SceneManager : MonoBehaviour {
 
             if (Input.GetKeyDown("joystick 1 button 4") || Input.GetKeyDown(KeyCode.Q))
             {
+                //Move the item index down
                 itemindexOne--;
+
+                //if we go outside the range of the index set it to the highest possible index
                 if (itemindexOne < 0)
                 {
                     itemindexOne = buildables.Count - 1;
                 }
+                
+                //Get the old object that the player currently has
                 GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
+                //Set the player's object to the new indexed object
                 p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemindexOne], p1Cursor.transform);
+                //Destroy the old object
                 Destroy(temp);
             }
 
             if (Input.GetKeyDown("joystick 1 button 5") || Input.GetKeyDown(KeyCode.E))
             {
+                //Move the item index up
                 itemindexOne++;
+                
+                //if we move abive the range of the possible incex set the index to 0
                 if (itemindexOne >= buildables.Count)
                 {
                     itemindexOne = 0;
                 }
+
+                //Get the old object that the player currently has
                 GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
+                //Set the player's object to the new indexed object
                 p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemindexOne], p1Cursor.transform);
+                //Destroy the old object
                 Destroy(temp);
             }
 
+            //Copy of the above code, just for the second player
             if (Input.GetKeyDown("joystick 2 button 4") || Input.GetKeyDown(KeyCode.RightControl))
             {
                 itemindexTwo--;
@@ -386,6 +413,9 @@ public class SceneManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Moving from the build phase we, handle the externals of the build phase, give the players control over their characters, and swap sides.
+    /// </summary>
     private void BeginSurvivalPhase()
     {
         roundUI.SetActive(false);
@@ -433,11 +463,15 @@ public class SceneManager : MonoBehaviour {
         playerOne.GetComponent<Player>().enabled = true;
         playerTwo.GetComponent<Player>().enabled = true;
 
+        //Swaps the players
         SetPlayers();
 
         state = GameState.survival;
     }
 
+    /// <summary>
+    /// When a player has won we determine the winner based on which player has died, audio is played and label is assigned accordingly.
+    /// </summary>
     private void BeginWinPhase()
     {
         roundUI.SetActive(false);
@@ -458,6 +492,9 @@ public class SceneManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Loops through the trap lists to see if either player jhas collided, plays sound and subtracts health accordingly.
+    /// </summary>
     private void HandlePlayerTrapCollisions()
     {
         if (state == GameState.survival)
@@ -466,10 +503,12 @@ public class SceneManager : MonoBehaviour {
             {
                 if (playerOne.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds) && hurtTimerOne <= 0)
                 {
+                    
                     audioPlayer.clip = audioClips[playerOneHealth - 1];
                     audioPlayer.Play();
                     playerOne.GetComponent<Player>().currentHealth--;
                     hurtTimerOne = 60;
+                    
                 }
 
                 if (playerTwo.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds) && hurtTimerTwo <= 0)
@@ -481,8 +520,14 @@ public class SceneManager : MonoBehaviour {
                 }
             }
         }
+        //set the scene manager's variables for the player health
+        playerOneHealth = playerOne.GetComponent<Player>().currentHealth;
+        playerTwoHealth = playerTwo.GetComponent<Player>().currentHealth;
     }
 
+    /// <summary>
+    /// Creates the initial platforms and spikeball for each side
+    /// </summary>
     private void LoadInitialLevel()
     {
         //left side
