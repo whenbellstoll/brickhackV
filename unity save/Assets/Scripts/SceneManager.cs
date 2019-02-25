@@ -36,6 +36,7 @@ public class SceneManager : MonoBehaviour {
 
     [SerializeField] public int playerHealth;
 
+
     [HideInInspector] public int playerOneHealth = 0;
     [HideInInspector] public int playerTwoHealth = 0;
 
@@ -44,12 +45,14 @@ public class SceneManager : MonoBehaviour {
 
     private GameState state = GameState.building;
 
+    //TODO: cursor should maybe be directly linked to the player to tidy things up
     [SerializeField] GameObject cursorPrefab;
     GameObject p1Cursor;
     GameObject p2Cursor;
 
     [SerializeField] List<GameObject> buildables;
     List<GameObject> platforms = new List<GameObject>();
+    //TODO: get rid of new platforms to help post-selection platform editing
     List<GameObject> newPlatforms = new List<GameObject>();
 
     public static List<GameObject> traps = new List<GameObject>();
@@ -58,9 +61,10 @@ public class SceneManager : MonoBehaviour {
     [SerializeField] private AudioSource winAnnoucer;
     [SerializeField] public List<AudioClip> audioClips = new List<AudioClip>();
 
-    int itemindexOne;
-    int itemindexTwo; //Keeps track of which items the players want to set down.
+    //TODO: make itemIndex a field in player?
+    int[] itemIndex = { 0, 0 };
 
+    //TODO: make hurt timer a field in player?
     int hurtTimerOne = 0;
     int hurtTimerTwo = 0;
     public static bool heartsPositionCorrect = true;
@@ -82,8 +86,7 @@ public class SceneManager : MonoBehaviour {
     private void Awake()
     {
         ResetGame();
-        itemindexOne = 0;
-        itemindexTwo = 0;
+        itemIndex[0] = itemIndex[1] = 0;
     }
 
     /// <summary>
@@ -100,8 +103,8 @@ public class SceneManager : MonoBehaviour {
         timer = buildTime;
 
         //reset the health of the players.
-        playerOne.GetComponent<Player>().currentHealth = playerOne.GetComponent<Player>().baseHealth;
-        playerTwo.GetComponent<Player>().currentHealth = playerTwo.GetComponent<Player>().baseHealth;
+        playerOne.GetComponent<Player>().ResetHealth();
+        playerTwo.GetComponent<Player>().ResetHealth();
 
         //Destroy all traps and platforms previously placed
         for(int i = 0; i < platforms.Count; i++)
@@ -141,20 +144,37 @@ public class SceneManager : MonoBehaviour {
                 //When the players want to change the item they're using, do it.
                 HandleSelectionChanging();
 
-                //decrease the timer by delta time
-                timer -= Time.deltaTime;
-
-                //The next two if statement place objects when the players press the appropriate buttons.
+                //TODO: I hate that this code is just repeated and I know it can be fixed but I'm not gonna do it right now
                 if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown(KeyCode.F))
                 {
-                    PlaceObject(p1Cursor);
+                    //if player 1 has an object
+                    if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null)
+                    {
+                        PlaceObject(p1Cursor);
+                    }
+                    else
+                    {
+                        PlatformMovability(p1Cursor);
+                    }
                 }
 
-                if(Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.RightShift))
+
+                if (Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.RightShift))
                 {
-                    PlaceObject(p2Cursor);
+                    //if player 2 has an object
+                    if (p2Cursor.GetComponent<StoreObjectToBuild>().obj != null)
+                    {
+                        PlaceObject(p2Cursor);
+                    }
+                    else
+                    {
+                        PlatformMovability(p2Cursor);
+                    }
                 }
+                
 
+                //decrease the timer by delta time
+                timer -= Time.deltaTime;
 
 
                 //When the timer reaches 0, go to the survival phase.
@@ -331,8 +351,7 @@ public class SceneManager : MonoBehaviour {
         playerTwo.GetComponent<Player>().enabled = false;
 
         //Item indexes are reset
-        itemindexOne = 0;
-        itemindexTwo = 0;
+        itemIndex[0] = itemIndex[1] = 0;
         //Get the item 
         p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[0], p1Cursor.transform);
         p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[0], p2Cursor.transform);
@@ -351,18 +370,18 @@ public class SceneManager : MonoBehaviour {
             if (Input.GetKeyDown("joystick 1 button 4") || Input.GetKeyDown(KeyCode.Q))
             {
                 //Move the item index down
-                itemindexOne--;
+                itemIndex[0]--;
 
                 //if we go outside the range of the index set it to the highest possible index
-                if (itemindexOne < 0)
+                if (itemIndex[0] < 0)
                 {
-                    itemindexOne = buildables.Count - 1;
+                    itemIndex[0] = buildables.Count - 1;
                 }
                 
                 //Get the old object that the player currently has
                 GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
                 //Set the player's object to the new indexed object
-                p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemindexOne], p1Cursor.transform);
+                p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemIndex[0]], p1Cursor.transform);
                 //Destroy the old object
                 Destroy(temp);
             }
@@ -370,18 +389,18 @@ public class SceneManager : MonoBehaviour {
             if (Input.GetKeyDown("joystick 1 button 5") || Input.GetKeyDown(KeyCode.E))
             {
                 //Move the item index up
-                itemindexOne++;
+                itemIndex[0]++;
                 
                 //if we move abive the range of the possible incex set the index to 0
-                if (itemindexOne >= buildables.Count)
+                if (itemIndex[0] >= buildables.Count)
                 {
-                    itemindexOne = 0;
+                    itemIndex[0] = 0;
                 }
 
                 //Get the old object that the player currently has
                 GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
                 //Set the player's object to the new indexed object
-                p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemindexOne], p1Cursor.transform);
+                p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemIndex[0]], p1Cursor.transform);
                 //Destroy the old object
                 Destroy(temp);
             }
@@ -389,26 +408,48 @@ public class SceneManager : MonoBehaviour {
             //Copy of the above code, just for the second player
             if (Input.GetKeyDown("joystick 2 button 4") || Input.GetKeyDown(KeyCode.RightControl))
             {
-                itemindexTwo--;
-                if (itemindexTwo < 0)
+                itemIndex[1]--;
+                if (itemIndex[1] < 0)
                 {
-                    itemindexTwo = buildables.Count - 1;
+                    itemIndex[1] = buildables.Count - 1;
                 }
                 GameObject temp = p2Cursor.GetComponent<StoreObjectToBuild>().obj;
-                p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemindexTwo], p1Cursor.transform);
+                p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemIndex[1]], p1Cursor.transform);
                 Destroy(temp);
             }
 
             if (Input.GetKeyDown("joystick 2 button 5") || Input.GetKeyDown(KeyCode.Insert))
             {
-                itemindexTwo++;
-                if (itemindexTwo >= buildables.Count)
+                itemIndex[1]++;
+                if (itemIndex[1] >= buildables.Count)
                 {
-                    itemindexTwo = 0;
+                    itemIndex[1] = 0;
                 }
                 GameObject temp = p2Cursor.GetComponent<StoreObjectToBuild>().obj;
-                p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemindexTwo], p1Cursor.transform);
+                p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemIndex[1]], p1Cursor.transform);
                 Destroy(temp);
+            }
+        }
+    }
+
+    /// <summary>
+    /// handles picking up of objects by cursor, including collision detections
+    /// </summary>
+    /// <param name="cursor"></param>
+    void PlatformMovability(GameObject cursor)
+    {
+        foreach (GameObject platform in platforms)
+        {
+            if (platform.GetComponent<BoxCollider2D>().bounds.Intersects(cursor.GetComponent<BoxCollider2D>().bounds))
+            {
+                cursor.GetComponent<StoreObjectToBuild>().obj = platform;
+            }
+        }
+        foreach (GameObject trap in traps)
+        {
+            if (trap.GetComponent<BoxCollider2D>().bounds.Intersects(cursor.GetComponent<BoxCollider2D>().bounds))
+            {
+                cursor.GetComponent<StoreObjectToBuild>().obj = trap;
             }
         }
     }
