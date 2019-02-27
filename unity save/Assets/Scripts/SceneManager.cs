@@ -180,6 +180,20 @@ public class SceneManager : MonoBehaviour {
                 //When the timer reaches 0, go to the survival phase.
                 if (timer <= 0)
                 {
+                    //if the survival time is less than 15.
+                    if( roundTime < 15)
+                    {
+                        //every two rounds increase the time by one second
+                        if( roundNumber % 2 == 0)
+                        {
+                            roundTime++;
+                        }
+                    }
+                    else
+                    {
+                        //After round ten keep incrementing the time each and every round
+                        roundTime++;
+                    }
                     timer = roundTime;
                     BeginSurvivalPhase();
                 }
