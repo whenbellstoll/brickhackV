@@ -158,9 +158,12 @@ public class SceneManager : MonoBehaviour {
                 //TODO: I hate that this code is just repeated and I know it can be fixed but I'm not gonna do it right now
                 if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown(KeyCode.F))
                 {
-                    tintP1.GetComponent<SpriteRenderer>().enabled = false;
+                    if (tintP1.GetComponent<SpriteRenderer>().enabled)
+                    {
+                        tintP1.GetComponent<SpriteRenderer>().enabled = false;
+                    }
                     //if player 1 has an object
-                    if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null)
+                    else if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null)
                     {
                         PlaceObject(p1Cursor);
                     }
@@ -173,9 +176,12 @@ public class SceneManager : MonoBehaviour {
 
                 if (Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.RightShift))
                 {
-                    tintP2.GetComponent<SpriteRenderer>().enabled = false;
+                    if (tintP2.GetComponent<SpriteRenderer>().enabled)
+                    {
+                        tintP2.GetComponent<SpriteRenderer>().enabled = false;
+                    }
                     //if player 2 has an object
-                    if (p2Cursor.GetComponent<StoreObjectToBuild>().obj != null)
+                    else if (p2Cursor.GetComponent<StoreObjectToBuild>().obj != null)
                     {
                         PlaceObject(p2Cursor);
                     }
@@ -503,6 +509,9 @@ public class SceneManager : MonoBehaviour {
     /// </summary>
     private void BeginSurvivalPhase()
     {
+        tintP1.GetComponent<SpriteRenderer>().enabled = false;
+        tintP2.GetComponent<SpriteRenderer>().enabled = false;
+
         roundUI.SetActive(false);
         if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null)
         {
