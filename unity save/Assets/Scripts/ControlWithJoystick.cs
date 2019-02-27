@@ -21,9 +21,13 @@ public class ControlWithJoystick : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        //if anything extrnal to this function has updated the position
+        //"clean" our variable
+        position = transform.position;
+        //Note the abscence of this is why our objects appreaded to be getting "stuck"
+
         position.x += Input.GetAxis(horizontal) * speed;
         position.y += Input.GetAxis(vertical) * speed;
-
         //keyboard control for player 1
         if(horizontal == "C1Horizontal")
         {

@@ -339,9 +339,9 @@ public class SceneManager : MonoBehaviour {
         p2Cursor.transform.position = new Vector3(playerTwo.transform.position.x, playerTwo.transform.position.y + 10, 0);
 
         //Keep the cursor in bounds
+        //Right Cursor bounds assigns to the left if it detects that the object starts out of range.
         p1Cursor.AddComponent<ContainInBoxes>();
         p2Cursor.AddComponent<ContainInBoxes>();
-        
         //Control with Joy stick
         p1Cursor.GetComponent<ControlWithJoystick>().controllerNum = 1;
         p2Cursor.GetComponent<ControlWithJoystick>().controllerNum = 2;

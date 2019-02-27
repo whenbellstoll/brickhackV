@@ -33,9 +33,9 @@ public class ContainInBoxes : MonoBehaviour {
         }
         if (inLeft)
         {
-            if (transform.position.x > -1.3f)
+            if (transform.position.x > -1.4f)
             {
-                transform.position = new Vector3(-1.4f, transform.position.y);
+                transform.position = new Vector3(-1.5f, transform.position.y);
             }
             if (transform.position.x < -18.6f)
             {
@@ -56,9 +56,9 @@ public class ContainInBoxes : MonoBehaviour {
             {
                 transform.position = new Vector3(18.7f, transform.position.y);
             }
-            if (transform.position.x < 1.2f)
+            if (transform.position.x < 1.4f)
             {
-                transform.position = new Vector3(1.3f, transform.position.y);
+                transform.position = new Vector3(1.5f, transform.position.y);
             }
             if (transform.position.y < -12.7f)
             {
