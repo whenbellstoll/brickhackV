@@ -4308,7 +4308,7 @@ Prefab:
     - target: {fileID: 114658665042933122, guid: 857ba7e091f707840ba06c2e7bb98682,
         type: 2}
       propertyPath: buildTime
-      value: 7
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 114658665042933122, guid: 857ba7e091f707840ba06c2e7bb98682,
         type: 2}

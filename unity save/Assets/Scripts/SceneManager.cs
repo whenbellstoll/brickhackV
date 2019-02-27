@@ -43,6 +43,10 @@ public class SceneManager : MonoBehaviour {
     [SerializeField] private Sprite winRed;
     [SerializeField] private Sprite winBlue;
 
+
+    //Needs external script to activate sprite at the start of every round.
+    [SerializeField] GameObject heart1, heart2;
+
     private GameState state = GameState.building;
 
     //TODO: cursor should maybe be directly linked to the player to tidy things up
@@ -214,6 +218,10 @@ public class SceneManager : MonoBehaviour {
             case GameState.survival:
                 p1Cursor = null;
                 p2Cursor = null;
+
+                //Set hearts active (if they were collected)
+                heart1.SetActive(true);
+                heart2.SetActive(true);
 
                 timerDigits[1].SetSprite(Mathf.FloorToInt(timer % 10));
                 timerDigits[0].SetSprite(Mathf.FloorToInt((timer % 100) / 10));
