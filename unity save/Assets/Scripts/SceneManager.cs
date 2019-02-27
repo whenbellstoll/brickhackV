@@ -22,6 +22,11 @@ public class SceneManager : MonoBehaviour {
     [SerializeField] private Vector2 startPositionOne;
     [SerializeField] private Vector2 startPositionTwo;
 
+    [SerializeField] private GameObject tintP1;
+    [SerializeField] private GameObject tintP2;
+    private Vector3 tintPosLeft = new Vector3(-10, 1, -1);
+    private Vector3 tintPosRight = new Vector3(10, 1, -1);
+
     bool positionsGetSwapped = true;
 
     [SerializeField] private float buildTime;
@@ -123,6 +128,8 @@ public class SceneManager : MonoBehaviour {
         traps.Clear();
 
         LoadInitialLevel();
+        tintP1.GetComponent<SpriteRenderer>().enabled = true;
+        tintP2.GetComponent<SpriteRenderer>().enabled = true;
 
         //Set the phase to build
         state = GameState.building;
@@ -151,6 +158,7 @@ public class SceneManager : MonoBehaviour {
                 //TODO: I hate that this code is just repeated and I know it can be fixed but I'm not gonna do it right now
                 if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown(KeyCode.F))
                 {
+                    tintP1.GetComponent<SpriteRenderer>().enabled = false;
                     //if player 1 has an object
                     if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null)
                     {
@@ -165,6 +173,7 @@ public class SceneManager : MonoBehaviour {
 
                 if (Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.RightShift))
                 {
+                    tintP2.GetComponent<SpriteRenderer>().enabled = false;
                     //if player 2 has an object
                     if (p2Cursor.GetComponent<StoreObjectToBuild>().obj != null)
                     {
@@ -321,13 +330,19 @@ public class SceneManager : MonoBehaviour {
         {
             //Swap players to the other side
             playerOne.transform.position = startPositionTwo;
+            tintP1.transform.position = tintPosRight;
+
             playerTwo.transform.position = startPositionOne;
+            tintP2.transform.position = tintPosLeft;
         }
         else
         {
             //From the opposite side to their original starting positions.
             playerOne.transform.position = startPositionOne;
+            tintP1.transform.position = tintPosRight;
+
             playerTwo.transform.position = startPositionTwo;
+            tintP2.transform.position = tintPosLeft;
         }
         //Set the bool for the next round
         positionsGetSwapped = !positionsGetSwapped;
@@ -371,6 +386,10 @@ public class SceneManager : MonoBehaviour {
         //Players become disabled
         playerOne.GetComponent<Player>().enabled = false;
         playerTwo.GetComponent<Player>().enabled = false;
+
+        //Tint becomes enabled
+        tintP1.GetComponent<SpriteRenderer>().enabled = true;
+        tintP2.GetComponent<SpriteRenderer>().enabled = true;
 
         //Item indexes are reset
         itemIndex[0] = itemIndex[1] = 0;
