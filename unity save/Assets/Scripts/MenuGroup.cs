@@ -40,6 +40,12 @@ public class MenuGroup : MonoBehaviour {
             ButtonChange();
         }
 
+        if (Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(menuButtons[selectedButton].sceneChange);
+        }
+
+
         buttonOscilator = (buttonOscilator + (pulseSpeed * Time.deltaTime)) % (Mathf.PI * 2);
         menuButtons[selectedButton].transform.localScale = Vector2.one * (1 + pulseMagnitude + (Mathf.Sin(buttonOscilator) * pulseMagnitude));
 	}
