@@ -22,7 +22,16 @@ public class SceneManager : MonoBehaviour {
     [SerializeField] private Vector2 startPositionOne;
     [SerializeField] private Vector2 startPositionTwo;
 
+    [SerializeField] private GameObject tintP1;
+    [SerializeField] private GameObject tintP2;
+    private Vector3 tintPosLeft = new Vector3(-10, 1, -1);
+    private Vector3 tintPosRight = new Vector3(10, 1, -1);
+
     bool positionsGetSwapped = true;
+
+    //fixes selection getting skipped if player is pressing/presses A right after game switched to selection phase
+    [SerializeField] private float selectionTimeDelay;
+    private float delayTimer;
 
     [SerializeField] private float buildTime;
     [SerializeField] private float roundTime;
@@ -42,6 +51,10 @@ public class SceneManager : MonoBehaviour {
 
     [SerializeField] private Sprite winRed;
     [SerializeField] private Sprite winBlue;
+
+
+    //Needs external script to activate sprite at the start of every round.
+    [SerializeField] GameObject heart1, heart2;
 
     private GameState state = GameState.building;
 
@@ -119,6 +132,8 @@ public class SceneManager : MonoBehaviour {
         traps.Clear();
 
         LoadInitialLevel();
+        tintP1.GetComponent<SpriteRenderer>().enabled = true;
+        tintP2.GetComponent<SpriteRenderer>().enabled = true;
 
         //Set the phase to build
         state = GameState.building;
@@ -144,11 +159,19 @@ public class SceneManager : MonoBehaviour {
                 //When the players want to change the item they're using, do it.
                 HandleSelectionChanging();
 
+                delayTimer -= Time.deltaTime;
                 //TODO: I hate that this code is just repeated and I know it can be fixed but I'm not gonna do it right now
                 if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown(KeyCode.F))
                 {
+                    if (tintP1.GetComponent<SpriteRenderer>().enabled)
+                    {
+                        if (delayTimer <= 0)
+                        {
+                            tintP1.GetComponent<SpriteRenderer>().enabled = false;
+                        }
+                    }
                     //if player 1 has an object
-                    if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null)
+                    else if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null)
                     {
                         PlaceObject(p1Cursor);
                     }
@@ -161,8 +184,15 @@ public class SceneManager : MonoBehaviour {
 
                 if (Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.RightShift))
                 {
+                    if (tintP2.GetComponent<SpriteRenderer>().enabled)
+                    {
+                        if (delayTimer <= 0)
+                        {
+                            tintP2.GetComponent<SpriteRenderer>().enabled = false;
+                        }
+                    }
                     //if player 2 has an object
-                    if (p2Cursor.GetComponent<StoreObjectToBuild>().obj != null)
+                    else if (p2Cursor.GetComponent<StoreObjectToBuild>().obj != null)
                     {
                         PlaceObject(p2Cursor);
                     }
@@ -214,6 +244,10 @@ public class SceneManager : MonoBehaviour {
             case GameState.survival:
                 p1Cursor = null;
                 p2Cursor = null;
+
+                //Set hearts active (if they were collected)
+                heart1.SetActive(true);
+                heart2.SetActive(true);
 
                 timerDigits[1].SetSprite(Mathf.FloorToInt(timer % 10));
                 timerDigits[0].SetSprite(Mathf.FloorToInt((timer % 100) / 10));
@@ -275,7 +309,10 @@ public class SceneManager : MonoBehaviour {
         
 	}
 
-
+    /// <summary>
+    /// Handles the placement of objects
+    /// </summary>
+    /// <param name="cursor"></param>
     private void PlaceObject(GameObject cursor)
     {
         //if the object is a platform add it to platforms, if it's a trap add it to traps. 
@@ -313,13 +350,19 @@ public class SceneManager : MonoBehaviour {
         {
             //Swap players to the other side
             playerOne.transform.position = startPositionTwo;
+            tintP1.transform.position = tintPosRight;
+
             playerTwo.transform.position = startPositionOne;
+            tintP2.transform.position = tintPosLeft;
         }
         else
         {
             //From the opposite side to their original starting positions.
             playerOne.transform.position = startPositionOne;
+            tintP1.transform.position = tintPosRight;
+
             playerTwo.transform.position = startPositionTwo;
+            tintP2.transform.position = tintPosLeft;
         }
         //Set the bool for the next round
         positionsGetSwapped = !positionsGetSwapped;
@@ -364,11 +407,18 @@ public class SceneManager : MonoBehaviour {
         playerOne.GetComponent<Player>().enabled = false;
         playerTwo.GetComponent<Player>().enabled = false;
 
+        //Tint becomes enabled
+        tintP1.GetComponent<SpriteRenderer>().enabled = true;
+        tintP2.GetComponent<SpriteRenderer>().enabled = true;
+
         //Item indexes are reset
         itemIndex[0] = itemIndex[1] = 0;
         //Get the item 
         p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[0], p1Cursor.transform);
         p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[0], p2Cursor.transform);
+
+        //start selection delay
+        delayTimer = selectionTimeDelay;
     }
 
     /// <summary>
@@ -473,6 +523,9 @@ public class SceneManager : MonoBehaviour {
     /// </summary>
     private void BeginSurvivalPhase()
     {
+        tintP1.GetComponent<SpriteRenderer>().enabled = false;
+        tintP2.GetComponent<SpriteRenderer>().enabled = false;
+
         roundUI.SetActive(false);
         if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null)
         {

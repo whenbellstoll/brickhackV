@@ -30,7 +30,7 @@ public class Heart : MonoBehaviour {
             if (p2.GetComponent<Player>().currentHealth < p2.GetComponent<Player>().baseHealth)
             {
                 p2.GetComponent<Player>().currentHealth++;
-                Destroy(gameObject);
+                gameObject.SetActive(false);
             }
 
         }
