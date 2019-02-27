@@ -283,7 +283,10 @@ public class SceneManager : MonoBehaviour {
         
 	}
 
-
+    /// <summary>
+    /// Handles the placement of objects
+    /// </summary>
+    /// <param name="cursor"></param>
     private void PlaceObject(GameObject cursor)
     {
         //if the object is a platform add it to platforms, if it's a trap add it to traps. 
