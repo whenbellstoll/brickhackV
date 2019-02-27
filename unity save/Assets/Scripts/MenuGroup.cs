@@ -40,7 +40,7 @@ public class MenuGroup : MonoBehaviour {
             ButtonChange();
         }
 
-        if (Input.GetKeyDown(KeyCode.KeypadEnter))
+        if (Input.GetKeyDown(KeyCode.KeypadEnter) && menuButtons[selectedButton].works)
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(menuButtons[selectedButton].sceneChange);
         }
@@ -77,5 +77,5 @@ public struct MenuButton {
     public Transform transform;
     public SpriteRenderer render;
     public string sceneChange;
-    
+    public bool works; 
 }
