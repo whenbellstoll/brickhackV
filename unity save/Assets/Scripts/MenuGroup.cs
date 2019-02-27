@@ -40,7 +40,11 @@ public class MenuGroup : MonoBehaviour {
             ButtonChange();
         }
 
+<<<<<<< HEAD
         if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0"))
+=======
+        if (Input.GetKeyDown(KeyCode.KeypadEnter) && menuButtons[selectedButton].works)
+>>>>>>> 38461aef9aac95fb9f697397cc49fcf3830e1f5b
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(menuButtons[selectedButton].sceneChange);
         }
@@ -77,5 +81,5 @@ public struct MenuButton {
     public Transform transform;
     public SpriteRenderer render;
     public string sceneChange;
-    
+    public bool works; 
 }

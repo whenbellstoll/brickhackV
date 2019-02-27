@@ -1061,10 +1061,12 @@ MonoBehaviour:
   menuButtons:
   - transform: {fileID: 1388758303}
     render: {fileID: 1388758302}
-    sceneChange: Game_Backup
+    sceneChange: DaneTest
+    works: 1
   - transform: {fileID: 255318796}
     render: {fileID: 255318795}
     sceneChange: Instructions
+    works: 1
   selectedButton: 0
   selectedMaterial: {fileID: 2100000, guid: a572e626da64fc847835481e63b5fa84, type: 2}
   notSelectedMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}

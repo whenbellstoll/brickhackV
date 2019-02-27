@@ -144,9 +144,11 @@ MonoBehaviour:
   - transform: {fileID: 1322082747}
     render: {fileID: 1322082746}
     sceneChange: Game_Backup
+    works: 1
   - transform: {fileID: 1794074087}
     render: {fileID: 1794074086}
     sceneChange: Menu
+    works: 1
   selectedButton: 0
   selectedMaterial: {fileID: 2100000, guid: a572e626da64fc847835481e63b5fa84, type: 2}
   notSelectedMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
@@ -217,7 +219,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Sprite: {fileID: 21300000, guid: 357a6ffba89e6434d9e8609723222da3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
