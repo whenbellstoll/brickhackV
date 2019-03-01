@@ -6,6 +6,11 @@ public class ContainInBoxes : MonoBehaviour {
 
     Rect box = new Rect(0f, 10.9f, 16.8f, 23.6f);
 
+    public void SetRectHeight(float height = 23.6f)
+    {
+        box.height = height;
+    }
+
 	// Use this for initialization
 	void Start () {
         UpdateBox();
