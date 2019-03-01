@@ -28,19 +28,22 @@ public class MenuGroup : MonoBehaviour {
     void Update () {
 
         //scroll up
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetAxis("C1Horizontal") < -0.35f || Input.GetAxis("C2Horizontal") < -0.35f)
         {
             selectedButton = Mathf.Clamp(selectedButton - 1, 0, menuButtons.Length -1);
             ButtonChange();
         }
         //scroll down
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetAxis("C1Horizontal") > 0.35f || Input.GetAxis("C2Horizontal") > 0.35f)
         {
             selectedButton = Mathf.Clamp(selectedButton + 1, 0, menuButtons.Length - 1);
             ButtonChange();
         }
 
-        if (Input.GetKeyDown(KeyCode.KeypadEnter))
+
+        if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0"))
+
+            if (Input.GetKeyDown(KeyCode.KeypadEnter) && menuButtons[selectedButton].works)
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(menuButtons[selectedButton].sceneChange);
         }
@@ -77,5 +80,5 @@ public struct MenuButton {
     public Transform transform;
     public SpriteRenderer render;
     public string sceneChange;
-    
+    public bool works; 
 }

@@ -1,11 +1,10 @@
 fileFormatVersion: 2
-guid: c9c1b2189102d3e46877f73ab25dc8bd
+guid: 9c7bc50fdeb3d7142a7688f0adf6b5cb
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Start
-    21300002: Instruct
-    21300004: Return
-    21300006: Home
+    21300000: wideSpikeBoi_0
+    21300002: wideSpikeBoi_1
+    21300004: wideSpikeBoi_2
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -110,81 +109,65 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Start
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 144
-        width: 256
-        height: 48
-      alignment: 9
-      pivot: {x: 0.3, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 042abd3d0d53b5544a4469872c3fb31c
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Instruct
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 96
-        width: 256
-        height: 48
-      alignment: 9
-      pivot: {x: 0.465, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d8ef238476112ea4b93c28dfbbd861d3
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Return
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 48
-        width: 256
-        height: 48
-      alignment: 9
-      pivot: {x: 0.37, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9b14373d9d39dd140af1475a675a4093
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Home
+      name: wideSpikeBoi_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 256
+        width: 112
         height: 48
-      alignment: 9
-      pivot: {x: 0.07, y: 0.5}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e8ae5786b8cd70b49a4a2b2b815b4ea1
+      spriteID: f4ba867a4461d5e4ca53c82c38f72725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wideSpikeBoi_1
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 0
+        width: 112
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70688ebcb81a4a64fa2c8662080fdc6c
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wideSpikeBoi_2
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 0
+        width: 112
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -40, y: 8}
+        - {x: -40, y: -8}
+        - {x: 40, y: -8}
+        - {x: 40, y: 8}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 86879c5b6edef104ea8b82111a4b235d
       vertices: []
       indices: 
       edges: []
@@ -192,7 +175,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 9b1e77d32500149498c3d40c1acb0330
+    spriteID: 04ec54c982621de4fad97bd57a1d7a20
     vertices: []
     indices: 
     edges: []

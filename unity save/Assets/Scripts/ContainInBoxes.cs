@@ -7,6 +7,9 @@ public class ContainInBoxes : MonoBehaviour {
     float xPos;
     bool inLeft;
 
+    [SerializeField] Rect leftBox;
+    [SerializeField] Rect rightBox;
+
 	// Use this for initialization
 	void Start () {
         xPos = transform.position.x;

@@ -29,6 +29,10 @@ public class SceneManager : MonoBehaviour {
 
     bool positionsGetSwapped = true;
 
+    //fixes selection getting skipped if player is pressing/presses A right after game switched to selection phase
+    [SerializeField] private float selectionTimeDelay;
+    private float delayTimer;
+
     [SerializeField] private float buildTime;
     [SerializeField] private float roundTime;
     [SerializeField] private float winTime;
@@ -155,12 +159,16 @@ public class SceneManager : MonoBehaviour {
                 //When the players want to change the item they're using, do it.
                 HandleSelectionChanging();
 
+                delayTimer -= Time.deltaTime;
                 //TODO: I hate that this code is just repeated and I know it can be fixed but I'm not gonna do it right now
                 if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown(KeyCode.F))
                 {
                     if (tintP1.GetComponent<SpriteRenderer>().enabled)
                     {
-                        tintP1.GetComponent<SpriteRenderer>().enabled = false;
+                        if (delayTimer <= 0)
+                        {
+                            tintP1.GetComponent<SpriteRenderer>().enabled = false;
+                        }
                     }
                     //if player 1 has an object
                     else if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null)
@@ -178,7 +186,10 @@ public class SceneManager : MonoBehaviour {
                 {
                     if (tintP2.GetComponent<SpriteRenderer>().enabled)
                     {
-                        tintP2.GetComponent<SpriteRenderer>().enabled = false;
+                        if (delayTimer <= 0)
+                        {
+                            tintP2.GetComponent<SpriteRenderer>().enabled = false;
+                        }
                     }
                     //if player 2 has an object
                     else if (p2Cursor.GetComponent<StoreObjectToBuild>().obj != null)
@@ -405,6 +416,9 @@ public class SceneManager : MonoBehaviour {
         //Get the item 
         p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[0], p1Cursor.transform);
         p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[0], p2Cursor.transform);
+
+        //start selection delay
+        delayTimer = selectionTimeDelay;
     }
 
     /// <summary>
