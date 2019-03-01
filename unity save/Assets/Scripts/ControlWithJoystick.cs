@@ -9,7 +9,7 @@ public class ControlWithJoystick : MonoBehaviour {
     string vertical;
 
     Vector3 position;
-    public float speed = 0.1f;
+    public float speed;
 
 	// Use this for initialization
 	void Start () {

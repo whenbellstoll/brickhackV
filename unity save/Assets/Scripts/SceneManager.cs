@@ -65,10 +65,11 @@ public class SceneManager : MonoBehaviour {
 
     [SerializeField] List<GameObject> buildables;
     List<GameObject> platforms = new List<GameObject>();
-    //TODO: get rid of new platforms to help post-selection platform editing
-    List<GameObject> newPlatforms = new List<GameObject>();
-
     public static List<GameObject> traps = new List<GameObject>();
+
+    //Item cycle variables
+    private List<GameObject> playerOneItemCycle;
+    private List<GameObject> playerTwoItemCycle;
 
     [SerializeField] public AudioSource audioPlayer;
     [SerializeField] private AudioSource winAnnoucer;
@@ -81,7 +82,6 @@ public class SceneManager : MonoBehaviour {
     int hurtTimerOne = 0;
     int hurtTimerTwo = 0;
     public static bool heartsPositionCorrect = true;
-
 
     public GameObject roundUI;
     public int roundNumber = 1;
@@ -98,8 +98,26 @@ public class SceneManager : MonoBehaviour {
 
     private void Awake()
     {
-        ResetGame();
+        
         itemIndex[0] = itemIndex[1] = 0;
+        SetupCursors();
+
+        //create the item scycles
+        playerOneItemCycle = new List<GameObject>();
+        playerTwoItemCycle = new List<GameObject>();
+        GameObject temp;
+        foreach(GameObject buildable in buildables)
+        {
+            temp = Instantiate(buildable, p1Cursor.transform);
+            temp.SetActive(false);
+            playerOneItemCycle.Add(temp);
+
+            temp = Instantiate(buildable, p2Cursor.transform);
+            temp.SetActive(false);
+            playerTwoItemCycle.Add(temp);
+        }
+
+        ResetGame();
     }
 
     /// <summary>
@@ -128,6 +146,7 @@ public class SceneManager : MonoBehaviour {
         {
             Destroy(traps[i]);
         }
+
         platforms.Clear();
         traps.Clear();
 
@@ -174,6 +193,7 @@ public class SceneManager : MonoBehaviour {
                     else if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null)
                     {
                         PlaceObject(p1Cursor);
+                        SetCycleStates(1);
                     }
                     else
                     {
@@ -195,17 +215,16 @@ public class SceneManager : MonoBehaviour {
                     else if (p2Cursor.GetComponent<StoreObjectToBuild>().obj != null)
                     {
                         PlaceObject(p2Cursor);
+                        SetCycleStates(2);
                     }
                     else
                     {
                         PlatformMovability(p2Cursor);
                     }
                 }
-                
 
                 //decrease the timer by delta time
                 timer -= Time.deltaTime;
-
 
                 //When the timer reaches 0, go to the survival phase.
                 if (timer <= 0)
@@ -242,8 +261,6 @@ public class SceneManager : MonoBehaviour {
             /// SURVIVAL STATE
             ///
             case GameState.survival:
-                p1Cursor = null;
-                p2Cursor = null;
 
                 //Set hearts active (if they were collected)
                 heart1.SetActive(true);
@@ -315,11 +332,13 @@ public class SceneManager : MonoBehaviour {
     /// <param name="cursor"></param>
     private void PlaceObject(GameObject cursor)
     {
+        GameObject objToBuild = cursor.GetComponent<StoreObjectToBuild>().obj;
+
         //if the object is a platform add it to platforms, if it's a trap add it to traps. 
         if (cursor.GetComponent<StoreObjectToBuild>().obj.tag == "Platform")
         {
-            cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
-            platforms.Add(cursor.GetComponent<StoreObjectToBuild>().obj);
+            //cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
+            platforms.Add(Instantiate(objToBuild, objToBuild.transform.position, objToBuild.transform.rotation));
             cursor.GetComponent<StoreObjectToBuild>().obj = null;
 
             //play placement audio
@@ -329,8 +348,8 @@ public class SceneManager : MonoBehaviour {
         }
         else
         {
-            cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
-            traps.Add(cursor.GetComponent<StoreObjectToBuild>().obj);
+            //cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
+            traps.Add(Instantiate(objToBuild, objToBuild.transform.position, objToBuild.transform.rotation));
             cursor.GetComponent<StoreObjectToBuild>().obj = null;
 
             //Play placement audio
@@ -372,13 +391,10 @@ public class SceneManager : MonoBehaviour {
     }
 
     /// <summary>
-    /// Begins the item selection phase, brings the cursors into existence, creates the object the player can select from
+    /// create and set up the cursors
     /// </summary>
-    private void BeginPickingPhase()
+    private void SetupCursors()
     {
-        //Pull up the round UI
-        roundUI.SetActive(true);
-        
         //Instantiate the cursors
         p1Cursor = Instantiate(cursorPrefab);
         p2Cursor = Instantiate(cursorPrefab);
@@ -387,21 +403,31 @@ public class SceneManager : MonoBehaviour {
         p1Cursor.GetComponent<SpriteRenderer>().color = Color.blue;
         p2Cursor.GetComponent<SpriteRenderer>().color = Color.red;
 
-        //Set their speed
-        p1Cursor.GetComponent<ControlWithJoystick>().speed = 0.25f;
-        p2Cursor.GetComponent<ControlWithJoystick>().speed = 0.25f;
-
         //Set their position to the players plus ten
         p1Cursor.transform.position = new Vector3(playerOne.transform.position.x, playerOne.transform.position.y + 10, 0);
         p2Cursor.transform.position = new Vector3(playerTwo.transform.position.x, playerTwo.transform.position.y + 10, 0);
 
-        //Keep the cursor in bounds
-        //Right Cursor bounds assigns to the left if it detects that the object starts out of range.
-        p1Cursor.AddComponent<ContainInBoxes>();
-        p2Cursor.AddComponent<ContainInBoxes>();
         //Control with Joy stick
         p1Cursor.GetComponent<ControlWithJoystick>().controllerNum = 1;
         p2Cursor.GetComponent<ControlWithJoystick>().controllerNum = 2;
+    }
+
+
+    /// <summary>
+    /// Begins the item selection phase, brings the cursors into existence, creates the object the player can select from
+    /// </summary>
+    private void BeginPickingPhase()
+    {
+        //Pull up the round UI
+        roundUI.SetActive(true);
+
+        //reactivate the cursors
+        p1Cursor.SetActive(true);
+        p2Cursor.SetActive(true);
+
+        //Set their position to the players plus ten
+        p1Cursor.transform.position = new Vector3(playerOne.transform.position.x, playerOne.transform.position.y + 10, 0);
+        p2Cursor.transform.position = new Vector3(playerTwo.transform.position.x, playerTwo.transform.position.y + 10, 0);
 
         //Players become disabled
         playerOne.GetComponent<Player>().enabled = false;
@@ -414,11 +440,71 @@ public class SceneManager : MonoBehaviour {
         //Item indexes are reset
         itemIndex[0] = itemIndex[1] = 0;
         //Get the item 
-        p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[0], p1Cursor.transform);
-        p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[0], p2Cursor.transform);
+        //p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[0], p1Cursor.transform);
+        //p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[0], p2Cursor.transform);
+        
+        p1Cursor.GetComponent<StoreObjectToBuild>().obj = playerOneItemCycle[0];
+        p2Cursor.GetComponent<StoreObjectToBuild>().obj = playerTwoItemCycle[0];
+
+        SetCycleStates(itemIndex[0], 1);
+        SetCycleStates(itemIndex[1], 2);
 
         //start selection delay
         delayTimer = selectionTimeDelay;
+    }
+
+    /// <summary>
+    /// display the items in the item cycle
+    /// </summary>
+    /// <param name="itemIndex">selected item index</param>
+    /// <param name="player">player num (1/2)</param>
+    private void SetCycleStates(int itemIndex, int player)
+    {
+        List<GameObject> itemCycle = player == 1 ? playerOneItemCycle : playerTwoItemCycle;
+        GameObject cursor = player == 1 ? p1Cursor : p2Cursor;
+
+        for (int i = 0; i < itemCycle.Count; i++)
+        {
+            //previous item
+            if (i == (itemIndex - 1 + itemCycle.Count) % itemCycle.Count)
+            {
+                itemCycle[i].SetActive(true);
+                itemCycle[i].transform.position = cursor.transform.position + (Vector3.up * 2.5f);
+                itemCycle[i].GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
+                continue;
+            }
+            //current item
+            if (i == itemIndex)
+            {
+                itemCycle[i].SetActive(true);
+                itemCycle[i].transform.position = cursor.transform.position;
+                itemCycle[i].GetComponent<SpriteRenderer>().color = Color.white;
+                continue;
+            }
+            //next item
+            if (i == (itemIndex + 1) % itemCycle.Count)
+            {
+                itemCycle[i].SetActive(true);
+                itemCycle[i].transform.position = cursor.transform.position - (Vector3.up * 2.5f);
+                itemCycle[i].GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
+                continue;
+            }
+            itemCycle[i].SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// deactivate all cycyle objects
+    /// </summary>
+    /// <param name="player">player number (1/2) </param>
+    private void SetCycleStates(int player)
+    {
+        List<GameObject> itemCycle = player == 1 ? playerOneItemCycle : playerTwoItemCycle;
+        foreach(GameObject obj in itemCycle)
+        {
+            obj.SetActive(false);
+        }
+
     }
 
     /// <summary>
@@ -429,8 +515,6 @@ public class SceneManager : MonoBehaviour {
         //Next four ifs change the prefab the players select.
         if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null) //Gross, dispicable flag check, but nonetheless necessary
         {
-
-
             if (Input.GetKeyDown("joystick 1 button 4") || Input.GetKeyDown(KeyCode.Q))
             {
                 //Move the item index down
@@ -441,13 +525,11 @@ public class SceneManager : MonoBehaviour {
                 {
                     itemIndex[0] = buildables.Count - 1;
                 }
-                
-                //Get the old object that the player currently has
-                GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
-                //Set the player's object to the new indexed object
-                p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemIndex[0]], p1Cursor.transform);
-                //Destroy the old object
-                Destroy(temp);
+
+                SetCycleStates(itemIndex[0], 1);
+
+                p1Cursor.GetComponent<StoreObjectToBuild>().obj = playerOneItemCycle[itemIndex[0]];
+
             }
 
             if (Input.GetKeyDown("joystick 1 button 5") || Input.GetKeyDown(KeyCode.E))
@@ -461,12 +543,9 @@ public class SceneManager : MonoBehaviour {
                     itemIndex[0] = 0;
                 }
 
-                //Get the old object that the player currently has
-                GameObject temp = p1Cursor.GetComponent<StoreObjectToBuild>().obj;
-                //Set the player's object to the new indexed object
-                p1Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemIndex[0]], p1Cursor.transform);
-                //Destroy the old object
-                Destroy(temp);
+                SetCycleStates(itemIndex[0], 1);
+
+                p1Cursor.GetComponent<StoreObjectToBuild>().obj = playerOneItemCycle[itemIndex[0]];
             }
 
             //Copy of the above code, just for the second player
@@ -477,9 +556,9 @@ public class SceneManager : MonoBehaviour {
                 {
                     itemIndex[1] = buildables.Count - 1;
                 }
-                GameObject temp = p2Cursor.GetComponent<StoreObjectToBuild>().obj;
-                p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemIndex[1]], p1Cursor.transform);
-                Destroy(temp);
+
+                SetCycleStates(itemIndex[1], 2);
+                p2Cursor.GetComponent<StoreObjectToBuild>().obj = playerTwoItemCycle[itemIndex[1]];
             }
 
             if (Input.GetKeyDown("joystick 2 button 5") || Input.GetKeyDown(KeyCode.Insert))
@@ -489,9 +568,9 @@ public class SceneManager : MonoBehaviour {
                 {
                     itemIndex[1] = 0;
                 }
-                GameObject temp = p2Cursor.GetComponent<StoreObjectToBuild>().obj;
-                p2Cursor.GetComponent<StoreObjectToBuild>().obj = Instantiate(buildables[itemIndex[1]], p1Cursor.transform);
-                Destroy(temp);
+
+                SetCycleStates(itemIndex[1], 2);
+                p2Cursor.GetComponent<StoreObjectToBuild>().obj = playerTwoItemCycle[itemIndex[1]];
             }
         }
     }
@@ -527,47 +606,24 @@ public class SceneManager : MonoBehaviour {
         tintP2.GetComponent<SpriteRenderer>().enabled = false;
 
         roundUI.SetActive(false);
+
+        //place the currently selected item if there is one
         if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null)
         {
-            if (p1Cursor.GetComponent<StoreObjectToBuild>().obj.tag == "Platform")
-            {
-                p1Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
-                platforms.Add(p1Cursor.GetComponent<StoreObjectToBuild>().obj);
-                p1Cursor.GetComponent<StoreObjectToBuild>().obj = null;
-            }
-            else
-            {
-                p1Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
-                traps.Add(p1Cursor.GetComponent<StoreObjectToBuild>().obj);
-                p1Cursor.GetComponent<StoreObjectToBuild>().obj = null;
-            }
-
+            PlaceObject(p1Cursor);
+            SetCycleStates(1);
         }
         if (p2Cursor.GetComponent<StoreObjectToBuild>().obj != null)
         {
-            if (p2Cursor.GetComponent<StoreObjectToBuild>().obj.tag == "Trap")
-            {
-                p2Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
-                traps.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
-                p2Cursor.GetComponent<StoreObjectToBuild>().obj = null;
-            }
-            else
-            {
-                p2Cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
-                platforms.Add(p2Cursor.GetComponent<StoreObjectToBuild>().obj);
-                p2Cursor.GetComponent<StoreObjectToBuild>().obj = null;
-            }
+            PlaceObject(p2Cursor);
+            SetCycleStates(2);
         }
 
-        Destroy(p1Cursor);
-        Destroy(p2Cursor);
+        //deactivate the cursors
+        p1Cursor.SetActive(false);
+        p2Cursor.SetActive(false);
 
-        for(int i = 0; i < newPlatforms.Count; i++)
-        {
-            Destroy(newPlatforms[i]);
-        }
-        newPlatforms.Clear();
-
+        //enable the players
         playerOne.GetComponent<Player>().enabled = true;
         playerTwo.GetComponent<Player>().enabled = true;
 
