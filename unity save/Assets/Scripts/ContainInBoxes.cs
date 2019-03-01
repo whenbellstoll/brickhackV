@@ -4,73 +4,45 @@ using UnityEngine;
 
 public class ContainInBoxes : MonoBehaviour {
 
-    float xPos;
-    bool inLeft;
-
-    [SerializeField] Rect leftBox;
-    [SerializeField] Rect rightBox;
+    Rect box = new Rect(0f, 10.9f, 16.8f, 23.6f);
 
 	// Use this for initialization
 	void Start () {
-        xPos = transform.position.x;
-        if(xPos < 0)
-        {
-            inLeft = true;
-        }
-        else
-        {
-            inLeft = false;
-        }
+        UpdateBox();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        xPos = transform.position.x;
-        if (xPos < 0)
+        UpdateBox();
+
+        if (transform.position.x > box.x + box.width)
         {
-            inLeft = true;
+            transform.position = new Vector3(box.x + box.width - 0.1f, transform.position.y);
+        }
+        if (transform.position.x < box.x)
+        {
+            transform.position = new Vector3(box.x + 0.1f, transform.position.y);
+        }
+        if (transform.position.y < box.y - box.height)
+        {
+            transform.position = new Vector3(transform.position.x, box.y - box.height + 0.1f);
+        }
+        if (transform.position.y > box.y)
+        {
+            transform.position = new Vector3(transform.position.x, box.y - 0.1f);
+        }
+    }
+
+
+    private void UpdateBox()
+    {
+        if (transform.position.x < 0)
+        {
+            box.x = -18.6f;
         }
         else
         {
-            inLeft = false;
+            box.x = 1.4f;
         }
-        if (inLeft)
-        {
-            if (transform.position.x > -1.4f)
-            {
-                transform.position = new Vector3(-1.5f, transform.position.y);
-            }
-            if (transform.position.x < -18.6f)
-            {
-                transform.position = new Vector3(-18.5f, transform.position.y);
-            }
-            if (transform.position.y < -12.7f)
-            {
-                transform.position = new Vector3(transform.position.x, -12.6f);
-            }
-            if (transform.position.y > 10.9f)
-            {
-                transform.position = new Vector3(transform.position.x, 10.8f);
-            }
-        }
-        else
-        {
-            if (transform.position.x > 18.8f)
-            {
-                transform.position = new Vector3(18.7f, transform.position.y);
-            }
-            if (transform.position.x < 1.4f)
-            {
-                transform.position = new Vector3(1.5f, transform.position.y);
-            }
-            if (transform.position.y < -12.7f)
-            {
-                transform.position = new Vector3(transform.position.x, -12.6f);
-            }
-            if (transform.position.y > 10.9f)
-            {
-                transform.position = new Vector3(transform.position.x, 10.8f);
-            }
-        }
-	}
+    }
 }
