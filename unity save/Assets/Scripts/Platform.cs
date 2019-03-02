@@ -12,7 +12,7 @@ public class Platform : MonoBehaviour {
 	}
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         //Input.GetKeyDown("joystick 1 button 4") ||
         if (Input.GetKeyDown(KeyCode.T))

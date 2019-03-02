@@ -41,12 +41,8 @@ public class MenuGroup : MonoBehaviour {
         }
 
 
-        if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0"))
-<<<<<<< HEAD
-=======
-
-            if (Input.GetKeyDown(KeyCode.KeypadEnter) && menuButtons[selectedButton].works)
->>>>>>> 0097c7dc72d460fe00fc293bc204fd47a783f5ff
+        if ((Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown("joystick 2 button 0")) 
+            && menuButtons[selectedButton].works)
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(menuButtons[selectedButton].sceneChange);
         }
