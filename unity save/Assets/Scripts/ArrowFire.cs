@@ -38,7 +38,7 @@ public class ArrowFire : MonoBehaviour {
     //called by animator
     public void FireArrow()
     {
-        SceneManager.traps.Add(myArrow);
+        PlatformManager.traps.Add(myArrow);
         myArrow.SetActive(true);
         if (facingLeft)
         {
