@@ -57,7 +57,7 @@ public class SceneManager : MonoBehaviour {
     //Needs external script to activate sprite at the start of every round.
     [SerializeField] GameObject heart1, heart2;
 
-    private GameState state = GameState.building;
+    public GameState state = GameState.building;
 
     //TODO: cursor should maybe be directly linked to the player to tidy things up
     [SerializeField] GameObject cursorPrefab;
@@ -240,6 +240,13 @@ public class SceneManager : MonoBehaviour {
                         platformManager.PlatformMovability(p2Cursor);
                     }
                 }
+
+                //Rotation
+                if(Input.GetKeyDown(KeyCode.R))
+                {
+                    platformManager.Rotation(p1Cursor);
+                }
+                //Player 2 Rotation
 
                 //decrease the timer by delta time
                 timer -= Time.deltaTime;

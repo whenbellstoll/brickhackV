@@ -141,4 +141,16 @@ public class PlatformManager : MonoBehaviour {
             }
         }
     }
+
+    public void Rotation(GameObject cursor)
+    {
+        if (cursor.GetComponent<StoreObjectToBuild>().obj != null)
+        {
+            if (cursor.GetComponent<StoreObjectToBuild>().obj.GetComponent<Platform>() != null)
+            {
+                cursor.GetComponent<StoreObjectToBuild>().obj.GetComponent<Platform>().Rotate();
+            }
+        }
+    }
+
 }

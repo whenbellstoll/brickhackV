@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Platform : MonoBehaviour {
 
-
+    
 	// Use this for initialization
 	void Start ()
     {
@@ -14,11 +14,14 @@ public class Platform : MonoBehaviour {
     // Update is called once per frame
     protected virtual void Update()
     {
-        //Input.GetKeyDown("joystick 1 button 4") ||
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            transform.Rotate(new Vector3(0, 0, 90));
 
-        }
+
+        
     }
+
+    public void Rotate()
+    {
+        transform.Rotate(new Vector3(0, 0, 90));
+    }
+
 }
