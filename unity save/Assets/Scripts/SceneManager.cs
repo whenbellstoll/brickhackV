@@ -247,6 +247,11 @@ public class SceneManager : MonoBehaviour {
                     platformManager.Rotation(p1Cursor);
                 }
                 //Player 2 Rotation
+                /*if(Input.yada)
+                 {
+                    platformManger.Rotation(p2Cursor);
+                 }
+                */
 
                 //decrease the timer by delta time
                 timer -= Time.deltaTime;
