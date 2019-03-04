@@ -132,6 +132,9 @@ public class SceneManager : MonoBehaviour {
         playerOne.GetComponent<Player>().ResetHealth();
         playerTwo.GetComponent<Player>().ResetHealth();
 
+        playerOneHealth = playerOne.GetComponent<Player>().currentHealth;
+        playerTwoHealth = playerTwo.GetComponent<Player>().currentHealth;
+
         platformManager.LoadInitialLevel();
         tintP1.GetComponent<SpriteRenderer>().enabled = true;
         tintP2.GetComponent<SpriteRenderer>().enabled = true;
@@ -224,13 +227,6 @@ public class SceneManager : MonoBehaviour {
                     }
                     timer = roundTime;
                     BeginSurvivalPhase();
-                }
-
-                //if one of the players has died (impossible in the build phase, but just a failsafe)
-                //go to the win phase.
-                if (playerOneHealth <= 0 || playerTwoHealth <= 0)
-                {
-                    BeginWinPhase();
                 }
 
 

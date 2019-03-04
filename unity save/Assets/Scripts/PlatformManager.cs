@@ -51,15 +51,15 @@ public class PlatformManager : MonoBehaviour {
     public void LoadInitialLevel()
     {
         //left side
-        platforms.Add(Instantiate(buildables[0], new Vector3(-17,  -9, 0), Quaternion.identity));
-        platforms.Add(Instantiate(buildables[2], new Vector3(-19, -11, 0), Quaternion.identity));
-        platforms.Add(Instantiate(buildables[1], new Vector3(-2, -6, 0), Quaternion.identity));
+        platforms.Add(Instantiate(buildables[0], new Vector3(-16.5f,  -9, 0), Quaternion.identity));
+        platforms.Add(Instantiate(buildables[2], new Vector3(-18.5f, -11, 0), Quaternion.identity));
+        platforms.Add(Instantiate(buildables[1], new Vector3(-2.5f, -6, 0), Quaternion.identity));
         traps.Add(Instantiate(buildables[4], new Vector3(-2, -12, 0), Quaternion.identity));
 
         //right side
-        platforms.Add(Instantiate(buildables[0], new Vector3(17, -9, 0), Quaternion.identity));
-        platforms.Add(Instantiate(buildables[2], new Vector3(19, -11, 0), Quaternion.identity));
-        platforms.Add(Instantiate(buildables[1], new Vector3(2, -6, 0), Quaternion.identity));
+        platforms.Add(Instantiate(buildables[0], new Vector3(16.5f, -9, 0), Quaternion.identity));
+        platforms.Add(Instantiate(buildables[2], new Vector3(18.5f, -11, 0), Quaternion.identity));
+        platforms.Add(Instantiate(buildables[1], new Vector3(2.5f, -6, 0), Quaternion.identity));
         traps.Add(Instantiate(buildables[4], new Vector3(2, -12, 0), Quaternion.identity));
     }
 
