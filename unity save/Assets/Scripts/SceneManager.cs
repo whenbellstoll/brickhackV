@@ -72,6 +72,39 @@ public class SceneManager : MonoBehaviour {
     [SerializeField] private AudioSource winAnnoucer;
     [SerializeField] public List<AudioClip> audioClips = new List<AudioClip>();
 
+    private bool spiked = false;
+
+    public bool Spiked
+    {
+        set
+        {
+            spiked = value;
+            GameObject temp;
+            for (int s = 0; s < platformManager.spikedBuildables.Count; s++)
+            {
+                if (spiked)
+                {
+                    temp = playerOneItemCycle[s];
+                    playerOneItemCycle[s] = Instantiate(platformManager.spikedBuildables[s], p1Cursor.transform);
+                    Destroy(temp);
+                    temp = playerTwoItemCycle[s];
+                    playerTwoItemCycle[s] = Instantiate(platformManager.spikedBuildables[s], p2Cursor.transform);
+                    Destroy(temp);
+                }
+                else
+                {
+                    temp = playerOneItemCycle[s];
+                    playerOneItemCycle[s] = Instantiate(platformManager.buildables[s], p1Cursor.transform);
+                    Destroy(temp);
+                    temp = playerTwoItemCycle[s];
+                    playerTwoItemCycle[s] = Instantiate(platformManager.buildables[s], p2Cursor.transform);
+                    Destroy(temp);
+                }
+            }
+            
+        }
+    }
+
     //TODO: make itemIndex a field in player?
     int[] itemIndex = { 0, 0 };
 
@@ -142,6 +175,9 @@ public class SceneManager : MonoBehaviour {
         //Set the phase to build
         state = GameState.building;
         roundUI.SetActive(true);
+
+        Spiked = false;
+
         BeginPickingPhase();
     }
 

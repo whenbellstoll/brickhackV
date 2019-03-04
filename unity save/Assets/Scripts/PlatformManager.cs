@@ -8,6 +8,8 @@ public class PlatformManager : MonoBehaviour {
     List<GameObject> platforms = new List<GameObject>();
     public static List<GameObject> traps = new List<GameObject>();
 
+    [SerializeField] public List<GameObject> spikedBuildables;
+
     int hurtTimerOne = 0;
     int hurtTimerTwo = 0;
 
