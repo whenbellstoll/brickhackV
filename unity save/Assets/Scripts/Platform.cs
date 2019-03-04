@@ -4,22 +4,21 @@ using UnityEngine;
 
 public class Platform : MonoBehaviour {
 
-    //used to detect collision between cursor and platform
-    GameObject cursor;
-
-    public float speed = 0.1f;
-
-    Vector3 position;
 
 	// Use this for initialization
-	void Start () {
-        position = transform.position;
+	void Start ()
+    {
 
-        cursor = GameObject.Find("Cursor");
 	}
-	
-	// Update is called once per frame
-	void Update () {
-        //transform.position = position;
-	}
+
+    // Update is called once per frame
+    protected virtual void Update()
+    {
+        //Input.GetKeyDown("joystick 1 button 4") ||
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            transform.Rotate(new Vector3(0, 0, 90));
+
+        }
+    }
 }
