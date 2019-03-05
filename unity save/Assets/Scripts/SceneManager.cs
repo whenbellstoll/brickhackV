@@ -60,7 +60,8 @@ public class SceneManager : MonoBehaviour {
     public GameState state = GameState.building;
 
     //TODO: cursor should maybe be directly linked to the player to tidy things up
-    [SerializeField] GameObject cursorPrefab;
+    [SerializeField] GameObject cursorRed;
+    [SerializeField] GameObject cursorBlue;
     GameObject p1Cursor;
     GameObject p2Cursor;
 
@@ -379,8 +380,8 @@ public class SceneManager : MonoBehaviour {
     private void SetupCursors()
     {
         //Instantiate the cursors
-        p1Cursor = Instantiate(cursorPrefab);
-        p2Cursor = Instantiate(cursorPrefab);
+        p1Cursor = Instantiate(cursorBlue);
+        p2Cursor = Instantiate(cursorRed);
 
         //Set the appropriate color
         p1Cursor.GetComponent<SpriteRenderer>().color = Color.blue;

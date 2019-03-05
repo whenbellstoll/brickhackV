@@ -4114,6 +4114,7 @@ MonoBehaviour:
   - {fileID: 1516468355454526, guid: bc9bf1edc28418940a68faec17388465, type: 2}
   - {fileID: 1689680402475142, guid: 33ecbc85b33f30947bc55724414fd1bc, type: 2}
   - {fileID: 1187550484189648, guid: a2b5bcf0ff2fcce4e8d600766a7dedd8, type: 2}
+  spikedBuildables: []
 --- !u!114 &784835132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4630,6 +4631,18 @@ Prefab:
       propertyPath: selectionTimeDelay
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114658665042933122, guid: 857ba7e091f707840ba06c2e7bb98682,
+        type: 2}
+      propertyPath: cursorRed
+      value: 
+      objectReference: {fileID: 1660381129266098, guid: b233f0b55c1e61348924ac385b78077e,
+        type: 2}
+    - target: {fileID: 114658665042933122, guid: 857ba7e091f707840ba06c2e7bb98682,
+        type: 2}
+      propertyPath: cursorBlue
+      value: 
+      objectReference: {fileID: 1806901731347508, guid: c66478f3ee64d0f4d854c04a35386a56,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 857ba7e091f707840ba06c2e7bb98682, type: 2}
   m_IsPrefabAsset: 0
