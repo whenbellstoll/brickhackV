@@ -56,8 +56,8 @@ public class UIManager : MonoBehaviour
         }
         for(int h = 0; h<manager.playerHealth; h++)
         {
-            playerOneHearts[h].SetBool("Solid", manager.playerOneHealth > h);
-            playerTwoHearts[h].SetBool("Solid", manager.playerTwoHealth > h);
+            playerOneHearts[h].SetBool("Solid", manager.GetPlayerHealth(1) > h);
+            playerTwoHearts[h].SetBool("Solid", manager.GetPlayerHealth(2) > h);
         }
 
         roundDigits[1].SetSprite(Mathf.FloorToInt(manager.roundNumber % 10));

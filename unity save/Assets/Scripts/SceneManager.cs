@@ -19,14 +19,20 @@ public class SceneManager : MonoBehaviour {
     private PlatformManager platformManager;
     [SerializeField] private GameObject playerOne;
     [SerializeField] private GameObject playerTwo;
+    public int GetPlayerHealth(int player)
+    {
+        if(player == 1)
+        {
+            return playerOne.GetComponent<Player>().currentHealth;
+        }
+        else
+        {
+            return playerTwo.GetComponent<Player>().currentHealth;
+        }
+    }
 
     [SerializeField] private Vector2 startPositionOne;
     [SerializeField] private Vector2 startPositionTwo;
-
-    [SerializeField] private GameObject tintP1;
-    [SerializeField] private GameObject tintP2;
-    private Vector3 tintPosLeft = new Vector3(-10, 1, -1);
-    private Vector3 tintPosRight = new Vector3(10, 1, -1);
 
     bool positionsGetSwapped = true;
 
@@ -45,10 +51,6 @@ public class SceneManager : MonoBehaviour {
     private float timer;
 
     [SerializeField] public int playerHealth;
-
-
-    [HideInInspector] public int playerOneHealth = 0;
-    [HideInInspector] public int playerTwoHealth = 0;
 
     [SerializeField] private Sprite winRed;
     [SerializeField] private Sprite winBlue;
@@ -166,12 +168,8 @@ public class SceneManager : MonoBehaviour {
         playerOne.GetComponent<Player>().ResetHealth();
         playerTwo.GetComponent<Player>().ResetHealth();
 
-        playerOneHealth = playerOne.GetComponent<Player>().currentHealth;
-        playerTwoHealth = playerTwo.GetComponent<Player>().currentHealth;
-
         platformManager.LoadInitialLevel();
-        tintP1.GetComponent<SpriteRenderer>().enabled = true;
-        tintP2.GetComponent<SpriteRenderer>().enabled = true;
+        platformManager.GameReset();
 
         //Set the phase to build
         state = GameState.building;
@@ -197,51 +195,19 @@ public class SceneManager : MonoBehaviour {
                 //When the players want to change the item they're using, do it.
                 HandleSelectionChanging();
 
+                platformManager.HandlePlacing(p1Cursor, p2Cursor, delayTimer);
+                //TODO: this is a workaround to SceneManager-being-overloaded issues. SetCycleStates should eventually be in platform manager
+                if(p1Cursor.GetComponent<StoreObjectToBuild>().obj == null)
+                {
+                    SetCycleStates(1);
+                }
+                if (p2Cursor.GetComponent<StoreObjectToBuild>().obj == null)
+                {
+                    SetCycleStates(2);
+                }
+
                 delayTimer -= Time.deltaTime;
-                //TODO: I hate that this code is just repeated and I know it can be fixed but I'm not gonna do it right now
-                if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown(KeyCode.F))
-                {
-                    if (tintP1.GetComponent<SpriteRenderer>().enabled)
-                    {
-                        if (delayTimer <= 0)
-                        {
-                            tintP1.GetComponent<SpriteRenderer>().enabled = false;
-                        }
-                    }
-                    //if player 1 has an object
-                    else if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null)
-                    {
-                        platformManager.PlaceObject(p1Cursor);
-                        SetCycleStates(1);
-                    }
-                    else
-                    {
-                        platformManager.PlatformMovability(p1Cursor);
-                    }
-                }
-
-
-                if (Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.RightShift))
-                {
-                    if (tintP2.GetComponent<SpriteRenderer>().enabled)
-                    {
-                        if (delayTimer <= 0)
-                        {
-                            tintP2.GetComponent<SpriteRenderer>().enabled = false;
-                        }
-                    }
-                    //if player 2 has an object
-                    else if (p2Cursor.GetComponent<StoreObjectToBuild>().obj != null)
-                    {
-                        platformManager.PlaceObject(p2Cursor);
-                        SetCycleStates(2);
-                    }
-                    else
-                    {
-                        platformManager.PlatformMovability(p2Cursor);
-                    }
-                }
-
+               
                 //Rotation
                 if(Input.GetKeyDown(KeyCode.R))
                 {
@@ -297,8 +263,6 @@ public class SceneManager : MonoBehaviour {
 
                 //Looks at the players and the list, collides accordingly and sets health
                 platformManager.HandlePlayerTrapCollisions(playerOne, playerTwo, state);
-                playerOneHealth = playerOne.GetComponent<Player>().currentHealth;
-                playerTwoHealth = playerTwo.GetComponent<Player>().currentHealth;
 
 
                 if (timer <= 0)
@@ -312,7 +276,7 @@ public class SceneManager : MonoBehaviour {
                     // Begins the item selection phase, brings the cursors into existence, creates the object the player can select from
                     BeginPickingPhase();
                 }
-                if (playerOneHealth <= 0 || playerTwoHealth <= 0)
+                if (playerOne.GetComponent<Player>().currentHealth <= 0 || playerTwo.GetComponent<Player>().currentHealth <= 0)
                 {
                     BeginWinPhase();
                 }
@@ -353,20 +317,16 @@ public class SceneManager : MonoBehaviour {
         {
             //Swap players to the other side
             playerOne.transform.position = startPositionTwo;
-            tintP1.transform.position = tintPosRight;
-
             playerTwo.transform.position = startPositionOne;
-            tintP2.transform.position = tintPosLeft;
         }
         else
         {
             //From the opposite side to their original starting positions.
             playerOne.transform.position = startPositionOne;
-            tintP1.transform.position = tintPosRight;
-
             playerTwo.transform.position = startPositionTwo;
-            tintP2.transform.position = tintPosLeft;
         }
+        platformManager.SwapTints(positionsGetSwapped);
+
         //Set the bool for the next round
         positionsGetSwapped = !positionsGetSwapped;
 
@@ -418,8 +378,7 @@ public class SceneManager : MonoBehaviour {
         playerTwo.GetComponent<Player>().enabled = false;
 
         //Tint becomes enabled
-        tintP1.GetComponent<SpriteRenderer>().enabled = true;
-        tintP2.GetComponent<SpriteRenderer>().enabled = true;
+        platformManager.GameStateBuilding();
 
         //Item indexes are reset
         itemIndex[0] = itemIndex[1] = 0;
@@ -497,8 +456,7 @@ public class SceneManager : MonoBehaviour {
     /// </summary>
     private void BeginSurvivalPhase()
     {
-        tintP1.GetComponent<SpriteRenderer>().enabled = false;
-        tintP2.GetComponent<SpriteRenderer>().enabled = false;
+        platformManager.GameStateSurvival();
 
         roundUI.SetActive(false);
 
@@ -537,7 +495,7 @@ public class SceneManager : MonoBehaviour {
         state = GameState.win;
         timer = winTime;
         winText.GetComponent<SpriteRenderer>().enabled = true;
-        if(playerOneHealth <= 0)
+        if(playerOne.GetComponent<Player>().currentHealth <= 0)
         {
             winAnnoucer.clip = audioClips[7];
             winAnnoucer.Play(44100);

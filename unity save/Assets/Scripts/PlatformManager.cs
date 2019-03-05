@@ -10,6 +10,14 @@ public class PlatformManager : MonoBehaviour {
 
     [SerializeField] public List<GameObject> spikedBuildables;
 
+    [SerializeField] private GameObject tintP1;
+    [SerializeField] private GameObject tintP2;
+    private Vector3 tintPosLeft = new Vector3(-10, 1, -1);
+    private Vector3 tintPosRight = new Vector3(10, 1, -1);
+
+    [SerializeField] private Rect safeAreaLeft;
+    [SerializeField] private Rect safeAreaRight;
+
     int hurtTimerOne = 0;
     int hurtTimerTwo = 0;
 
@@ -74,18 +82,21 @@ public class PlatformManager : MonoBehaviour {
         //TODO: placement made a sound before I ripped it out of SceneManager. Shouldn't be a hard fix but it's very low priority
         GameObject objToBuild = cursor.GetComponent<StoreObjectToBuild>().obj;
 
-        //if the object is a platform add it to platforms, if it's a trap add it to traps. 
-        if (cursor.GetComponent<StoreObjectToBuild>().obj.tag == "Platform")
+        if (!IsInSafeArea(objToBuild.GetComponent<BoxCollider2D>().bounds))
         {
-            //cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
-            platforms.Add(Instantiate(objToBuild, objToBuild.transform.position, objToBuild.transform.rotation));
-            cursor.GetComponent<StoreObjectToBuild>().obj = null;
-        }
-        else
-        {
-            //cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
-            traps.Add(Instantiate(objToBuild, objToBuild.transform.position, objToBuild.transform.rotation));
-            cursor.GetComponent<StoreObjectToBuild>().obj = null;
+            //if the object is a platform add it to platforms, if it's a trap add it to traps. 
+            if (cursor.GetComponent<StoreObjectToBuild>().obj.tag == "Platform")
+            {
+                //cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
+                platforms.Add(Instantiate(objToBuild, objToBuild.transform.position, objToBuild.transform.rotation));
+                cursor.GetComponent<StoreObjectToBuild>().obj = null;
+            }
+            else
+            {
+                //cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
+                traps.Add(Instantiate(objToBuild, objToBuild.transform.position, objToBuild.transform.rotation));
+                cursor.GetComponent<StoreObjectToBuild>().obj = null;
+            }
         }
     }
 
@@ -153,4 +164,105 @@ public class PlatformManager : MonoBehaviour {
         }
     }
 
+    private bool IsInSafeArea(Bounds obj)
+    {
+        //left side
+        if(obj.min.x < safeAreaLeft.x + safeAreaLeft.width &&
+            obj.max.x > safeAreaLeft.x &&
+            obj.min.y < safeAreaLeft.y + safeAreaLeft.height &&
+            obj.max.y > safeAreaLeft.y)
+        {
+            return true;
+        }
+
+        //right side
+        else if(obj.min.x < safeAreaRight.x + safeAreaRight.width &&
+            obj.max.x > safeAreaRight.x &&
+            obj.min.y < safeAreaRight.y + safeAreaRight.height &&
+            obj.max.y > safeAreaRight.y)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void HandlePlacing(GameObject p1Cursor, GameObject p2Cursor, float delayTimer)
+    {
+
+        //TODO: I hate that this code is just repeated and I know it can be fixed but I'm not gonna do it right now
+        if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown(KeyCode.F))
+        {
+            if (tintP1.GetComponent<SpriteRenderer>().enabled)
+            {
+                if (delayTimer <= 0)
+                {
+                    tintP1.GetComponent<SpriteRenderer>().enabled = false;
+                }
+            }
+            //if player 1 has an object
+            else if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null)
+            {
+                PlaceObject(p1Cursor);
+            }
+            else
+            {
+                PlatformMovability(p1Cursor);
+            }
+        }
+
+
+        if (Input.GetKeyDown("joystick 2 button 0") || Input.GetKeyDown(KeyCode.RightShift))
+        {
+            if (tintP2.GetComponent<SpriteRenderer>().enabled)
+            {
+                if (delayTimer <= 0)
+                {
+                    tintP2.GetComponent<SpriteRenderer>().enabled = false;
+                }
+            }
+            //if player 2 has an object
+            else if (p2Cursor.GetComponent<StoreObjectToBuild>().obj != null)
+            {
+                PlaceObject(p2Cursor);
+            }
+            else
+            {
+                PlatformMovability(p2Cursor);
+            }
+        }
+    }
+
+    public void GameReset()
+    {
+        tintP1.GetComponent<SpriteRenderer>().enabled = true;
+        tintP2.GetComponent<SpriteRenderer>().enabled = true;
+    }
+
+    public void GameStateBuilding()
+    {
+        tintP1.GetComponent<SpriteRenderer>().enabled = true;
+        tintP2.GetComponent<SpriteRenderer>().enabled = true;
+    }
+
+    public void GameStateSurvival()
+    {
+        tintP1.GetComponent<SpriteRenderer>().enabled = false;
+        tintP2.GetComponent<SpriteRenderer>().enabled = false;
+    }
+
+    public void SwapTints(bool positionsGetSwapped)
+    {
+        if (positionsGetSwapped)
+        {
+            //Swap tints to the other side
+            tintP1.transform.position = tintPosRight;
+            tintP2.transform.position = tintPosLeft;
+        }
+        else
+        {
+            //From the opposite side to their original starting positions.
+            tintP1.transform.position = tintPosRight;
+            tintP2.transform.position = tintPosLeft;
+        }
+    }
 }
