@@ -4280,18 +4280,6 @@ MonoBehaviour:
     y: -10
     width: 2
     height: 2
-  audioPlayer: {fileID: 854887437}
-  audioClips:
-  - {fileID: 8300000, guid: 2446f08a9947e91489eb825ac483bb63, type: 3}
-  - {fileID: 8300000, guid: 226efed3a669ead4d86289f47e97a13b, type: 3}
-  - {fileID: 8300000, guid: 6589974d73a64014691595d1bacb8d7b, type: 3}
-  - {fileID: 8300000, guid: 542ab8d4c1b8c57468661fd183de3f19, type: 3}
-  - {fileID: 8300000, guid: a3c3d64494bacf54cbfcfdfc4f3a8ea5, type: 3}
-  - {fileID: 8300000, guid: c9678510d2a435e49a5b9d37a2acc8c6, type: 3}
-  - {fileID: 8300000, guid: 4d3459a40e0595c47a5c26df5ec29d91, type: 3}
-  - {fileID: 8300000, guid: eeec4399848c0b045829224c253338da, type: 3}
-  - {fileID: 8300000, guid: 1e8e00a9993e8a14988ab4b6501bdec7, type: 3}
-  - {fileID: 8300000, guid: 002a46f17be49ba49b79e28306088623, type: 3}
 --- !u!114 &784835132
 MonoBehaviour:
   m_ObjectHideFlags: 0

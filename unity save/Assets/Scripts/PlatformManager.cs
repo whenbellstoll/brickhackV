@@ -10,8 +10,8 @@ public class PlatformManager : MonoBehaviour {
 
     [SerializeField] public List<GameObject> spikedBuildables;
 
-    [SerializeField] private GameObject tintP1;
-    [SerializeField] private GameObject tintP2;
+    [SerializeField] public GameObject tintP1;
+    [SerializeField] public GameObject tintP2;
     private Vector3 tintPosLeft = new Vector3(-10, -1, -1);
     private Vector3 tintPosRight = new Vector3(10, -1, -1);
 
@@ -20,6 +20,9 @@ public class PlatformManager : MonoBehaviour {
 
     int hurtTimerOne = 0;
     int hurtTimerTwo = 0;
+
+    [SerializeField] public AudioSource audioPlayer;
+    [SerializeField] public List<AudioClip> audioClips = new List<AudioClip>();
 
     // Use this for initialization
     void Start () {
@@ -62,15 +65,15 @@ public class PlatformManager : MonoBehaviour {
     {
         //left side
         platforms.Add(Instantiate(buildables[0], new Vector3(-16.5f,  -9, 0), Quaternion.identity));
-        platforms.Add(Instantiate(buildables[2], new Vector3(-18.5f, -11, 0), Quaternion.identity));
+        platforms.Add(Instantiate(buildables[1], new Vector3(-18.5f, -11, 0), Quaternion.identity));
         platforms.Add(Instantiate(buildables[1], new Vector3(-2.5f, -6, 0), Quaternion.identity));
-        traps.Add(Instantiate(buildables[4], new Vector3(-2, -12, 0), Quaternion.identity));
+        traps.Add(Instantiate(buildables[3], new Vector3(-2, -12, 0), Quaternion.identity));
 
         //right side
         platforms.Add(Instantiate(buildables[0], new Vector3(16.5f, -9, 0), Quaternion.identity));
-        platforms.Add(Instantiate(buildables[2], new Vector3(18.5f, -11, 0), Quaternion.identity));
+        platforms.Add(Instantiate(buildables[1], new Vector3(18.5f, -11, 0), Quaternion.identity));
         platforms.Add(Instantiate(buildables[1], new Vector3(2.5f, -6, 0), Quaternion.identity));
-        traps.Add(Instantiate(buildables[4], new Vector3(2, -12, 0), Quaternion.identity));
+        traps.Add(Instantiate(buildables[3], new Vector3(2, -12, 0), Quaternion.identity));
     }
 
     /// <summary>
@@ -135,8 +138,8 @@ public class PlatformManager : MonoBehaviour {
                 if (playerOne.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds) && hurtTimerOne <= 0)
                 {
 
-                    //audioPlayer.clip = audioClips[playerOneHealth - 1];
-                    //audioPlayer.Play();
+                    audioPlayer.clip = audioClips[playerOne.GetComponent<Player>().currentHealth - 1];
+                    audioPlayer.Play();
                     playerOne.GetComponent<Player>().currentHealth--;
                     hurtTimerOne = 60;
 
@@ -144,8 +147,8 @@ public class PlatformManager : MonoBehaviour {
 
                 if (playerTwo.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds) && hurtTimerTwo <= 0)
                 {
-                    //audioPlayer.clip = audioClips[playerTwoHealth + 2];
-                    //audioPlayer.Play();
+                    audioPlayer.clip = audioClips[playerTwo.GetComponent<Player>().currentHealth + 2];
+                    audioPlayer.Play();
                     playerTwo.GetComponent<Player>().currentHealth--;
                     hurtTimerTwo = 60;
                 }
@@ -188,7 +191,6 @@ public class PlatformManager : MonoBehaviour {
 
     public void HandlePlacing(GameObject p1Cursor, GameObject p2Cursor, float delayTimer)
     {
-
         //TODO: I hate that this code is just repeated and I know it can be fixed but I'm not gonna do it right now
         if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown(KeyCode.F))
         {
@@ -247,12 +249,14 @@ public class PlatformManager : MonoBehaviour {
     {
         tintP1.GetComponent<SpriteRenderer>().enabled = true;
         tintP2.GetComponent<SpriteRenderer>().enabled = true;
+        SetPlatormMovement(false);
     }
 
     public void GameStateSurvival()
     {
         tintP1.GetComponent<SpriteRenderer>().enabled = false;
         tintP2.GetComponent<SpriteRenderer>().enabled = false;
+        SetPlatormMovement(true);
     }
 
     public void SwapTints(bool positionsGetSwapped)
@@ -285,5 +289,14 @@ public class PlatformManager : MonoBehaviour {
 
         platforms.Clear();
         traps.Clear();
+    }
+
+    private void SetPlatormMovement(bool b = false)
+    {
+        foreach (GameObject platform in platforms)
+        {
+            Debug.Log(platform.name);
+            platform.GetComponent<Platform>().SetMoving(b);
+        }
     }
 }
