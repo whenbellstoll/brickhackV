@@ -12,8 +12,8 @@ public class PlatformManager : MonoBehaviour {
 
     [SerializeField] private GameObject tintP1;
     [SerializeField] private GameObject tintP2;
-    private Vector3 tintPosLeft = new Vector3(-10, 1, -1);
-    private Vector3 tintPosRight = new Vector3(10, 1, -1);
+    private Vector3 tintPosLeft = new Vector3(-10, -1, -1);
+    private Vector3 tintPosRight = new Vector3(10, -1, -1);
 
     [SerializeField] private Rect safeAreaLeft;
     [SerializeField] private Rect safeAreaRight;
@@ -236,6 +236,9 @@ public class PlatformManager : MonoBehaviour {
     {
         tintP1.GetComponent<SpriteRenderer>().enabled = true;
         tintP2.GetComponent<SpriteRenderer>().enabled = true;
+        ClearLevel();
+        LoadInitialLevel();
+
     }
 
     public void GameStateBuilding()
@@ -252,6 +255,7 @@ public class PlatformManager : MonoBehaviour {
 
     public void SwapTints(bool positionsGetSwapped)
     {
+        Debug.Log("boi");
         if (positionsGetSwapped)
         {
             //Swap tints to the other side
@@ -261,8 +265,24 @@ public class PlatformManager : MonoBehaviour {
         else
         {
             //From the opposite side to their original starting positions.
-            tintP1.transform.position = tintPosRight;
-            tintP2.transform.position = tintPosLeft;
+            tintP1.transform.position = tintPosLeft;
+            tintP2.transform.position = tintPosRight;
         }
+    }
+
+    private void ClearLevel()
+    {
+        foreach (GameObject platform in platforms)
+        {
+            Destroy(platform);
+        }
+
+        foreach (GameObject trap in traps)
+        {
+            Destroy(trap);
+        }
+
+        platforms.Clear();
+        traps.Clear();
     }
 }
