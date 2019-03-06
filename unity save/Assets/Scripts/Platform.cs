@@ -12,6 +12,7 @@ public class Platform : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
+        //starts platform at random point in it's range to combat uniformity in movement
         posInRange = Random.Range(-range / 2, range / 2);
         position = transform.position;
         position.x += posInRange;
