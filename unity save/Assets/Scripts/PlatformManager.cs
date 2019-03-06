@@ -158,11 +158,16 @@ public class PlatformManager : MonoBehaviour {
 
     public void Rotation(GameObject cursor)
     {
-        if (cursor.GetComponent<StoreObjectToBuild>().obj != null)
+        GameObject objectToBuild = cursor.GetComponent<StoreObjectToBuild>().obj;
+        if (objectToBuild != null)
         {
-            if (cursor.GetComponent<StoreObjectToBuild>().obj.GetComponent<Platform>() != null)
+            if (objectToBuild.GetComponent<Platform>() != null)
             {
-                cursor.GetComponent<StoreObjectToBuild>().obj.GetComponent<Platform>().Rotate();
+                objectToBuild.GetComponent<Platform>().Rotate();
+            }
+            else if(objectToBuild.GetComponent<ArrowFire>() != null )
+            {
+                objectToBuild.GetComponent<ArrowFire>().RotateArrow();
             }
         }
     }

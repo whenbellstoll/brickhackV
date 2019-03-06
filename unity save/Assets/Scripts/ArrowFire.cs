@@ -32,13 +32,14 @@ public class ArrowFire : MonoBehaviour {
             myArrowArrowC.velocity.x = -10;
             myArrowArrowC.velocity.y = 0;
             myArrow.transform.right = new Vector2(1, 0);
-
+            gameObject.transform.right = new Vector2(1, 0);
         }
         else if( firingDirection == 1)
         {
             myArrowArrowC.velocity.x = 0;
             myArrowArrowC.velocity.y = 10;
             myArrow.transform.right = new Vector2(0, -1);
+            gameObject.transform.right = new Vector2(0, -1);
 
         }
         else if( firingDirection == 2)
@@ -46,12 +47,14 @@ public class ArrowFire : MonoBehaviour {
             myArrowArrowC.velocity.x = 10;
             myArrowArrowC.velocity.y = 0;
             myArrow.transform.right = new Vector2(-1,0);
+            gameObject.transform.right = new Vector2(-1, 0);
         }
         else if( firingDirection == 3 )
         {
             myArrowArrowC.velocity.x = 0;
             myArrowArrowC.velocity.y = -10;
             myArrow.transform.right = new Vector2(0, 1);
+            gameObject.transform.right = new Vector2(0, 1);
         }
         myArrow.transform.position = transform.position;
     }
