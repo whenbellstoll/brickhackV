@@ -218,12 +218,12 @@ public class SceneManager : MonoBehaviour {
                 delayTimer -= Time.deltaTime;
                
                 //Rotation
-                if(Input.GetKeyDown(KeyCode.R))
+                if(Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown("joystick 1 button 3"))
                 {
                     platformManager.Rotation(p1Cursor);
                 }
                 //Player 2 Rotation
-                if (Input.GetKeyDown(KeyCode.T))
+                if (Input.GetKeyDown(KeyCode.T) || Input.GetKeyDown("joystick 2 button 3"))
                 {
                     platformManager.Rotation(p2Cursor);
                 }
