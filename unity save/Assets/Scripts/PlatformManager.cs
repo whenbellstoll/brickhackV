@@ -62,15 +62,15 @@ public class PlatformManager : MonoBehaviour {
     {
         //left side
         platforms.Add(Instantiate(buildables[0], new Vector3(-16.5f,  -9, 0), Quaternion.identity));
-        platforms.Add(Instantiate(buildables[2], new Vector3(-18.5f, -11, 0), Quaternion.identity));
+        platforms.Add(Instantiate(buildables[1], new Vector3(-18.5f, -11, 0), Quaternion.identity));
         platforms.Add(Instantiate(buildables[1], new Vector3(-2.5f, -6, 0), Quaternion.identity));
-        traps.Add(Instantiate(buildables[4], new Vector3(-2, -12, 0), Quaternion.identity));
+        traps.Add(Instantiate(buildables[3], new Vector3(-2, -12, 0), Quaternion.identity));
 
         //right side
         platforms.Add(Instantiate(buildables[0], new Vector3(16.5f, -9, 0), Quaternion.identity));
-        platforms.Add(Instantiate(buildables[2], new Vector3(18.5f, -11, 0), Quaternion.identity));
+        platforms.Add(Instantiate(buildables[1], new Vector3(18.5f, -11, 0), Quaternion.identity));
         platforms.Add(Instantiate(buildables[1], new Vector3(2.5f, -6, 0), Quaternion.identity));
-        traps.Add(Instantiate(buildables[4], new Vector3(2, -12, 0), Quaternion.identity));
+        traps.Add(Instantiate(buildables[3], new Vector3(2, -12, 0), Quaternion.identity));
     }
 
     /// <summary>
@@ -247,12 +247,14 @@ public class PlatformManager : MonoBehaviour {
     {
         tintP1.GetComponent<SpriteRenderer>().enabled = true;
         tintP2.GetComponent<SpriteRenderer>().enabled = true;
+        SetPlatormMovement(false);
     }
 
     public void GameStateSurvival()
     {
         tintP1.GetComponent<SpriteRenderer>().enabled = false;
         tintP2.GetComponent<SpriteRenderer>().enabled = false;
+        SetPlatormMovement(true);
     }
 
     public void SwapTints(bool positionsGetSwapped)
@@ -285,5 +287,14 @@ public class PlatformManager : MonoBehaviour {
 
         platforms.Clear();
         traps.Clear();
+    }
+
+    private void SetPlatormMovement(bool b = false)
+    {
+        foreach (GameObject platform in platforms)
+        {
+            Debug.Log(platform.name);
+            platform.GetComponent<Platform>().SetMoving(b);
+        }
     }
 }

@@ -7,6 +7,10 @@ public class Platform : MonoBehaviour {
     [SerializeField] private float velocity = 0.1f;
     private float posInRange;
     private bool isMoving = false;
+    public void SetMoving(bool b = false)
+    {
+        isMoving = b;
+    }
 
     Vector3 position;
 
