@@ -21,6 +21,9 @@ public class PlatformManager : MonoBehaviour {
     int hurtTimerOne = 0;
     int hurtTimerTwo = 0;
 
+    [SerializeField] public AudioSource audioPlayer;
+    [SerializeField] public List<AudioClip> audioClips = new List<AudioClip>();
+
     // Use this for initialization
     void Start () {
 		
@@ -135,8 +138,8 @@ public class PlatformManager : MonoBehaviour {
                 if (playerOne.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds) && hurtTimerOne <= 0)
                 {
 
-                    //audioPlayer.clip = audioClips[playerOneHealth - 1];
-                    //audioPlayer.Play();
+                    audioPlayer.clip = audioClips[playerOne.GetComponent<Player>().currentHealth - 1];
+                    audioPlayer.Play();
                     playerOne.GetComponent<Player>().currentHealth--;
                     hurtTimerOne = 60;
 
@@ -144,8 +147,8 @@ public class PlatformManager : MonoBehaviour {
 
                 if (playerTwo.GetComponent<BoxCollider2D>().bounds.Intersects(trap.GetComponent<BoxCollider2D>().bounds) && hurtTimerTwo <= 0)
                 {
-                    //audioPlayer.clip = audioClips[playerTwoHealth + 2];
-                    //audioPlayer.Play();
+                    audioPlayer.clip = audioClips[playerTwo.GetComponent<Player>().currentHealth + 2];
+                    audioPlayer.Play();
                     playerTwo.GetComponent<Player>().currentHealth--;
                     hurtTimerTwo = 60;
                 }
