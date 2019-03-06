@@ -197,6 +197,8 @@ public class PlatformManager : MonoBehaviour {
                 if (delayTimer <= 0)
                 {
                     tintP1.GetComponent<SpriteRenderer>().enabled = false;
+                    p1Cursor.GetComponent<ControlWithJoystick>().enabled = true;
+                    p2Cursor.GetComponent<ControlWithJoystick>().enabled = true;
                 }
             }
             //if player 1 has an object
@@ -255,7 +257,6 @@ public class PlatformManager : MonoBehaviour {
 
     public void SwapTints(bool positionsGetSwapped)
     {
-        Debug.Log("boi");
         if (positionsGetSwapped)
         {
             //Swap tints to the other side

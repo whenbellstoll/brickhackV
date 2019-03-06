@@ -33,6 +33,8 @@ public class SceneManager : MonoBehaviour {
 
     [SerializeField] private Vector2 startPositionOne;
     [SerializeField] private Vector2 startPositionTwo;
+    [SerializeField] private Vector2 startPosCursorOne;
+    [SerializeField] private Vector2 startPosCursorTwo;
 
     bool positionsGetSwapped = true;
 
@@ -318,12 +320,18 @@ public class SceneManager : MonoBehaviour {
             //Swap players to the other side
             playerOne.transform.position = startPositionTwo;
             playerTwo.transform.position = startPositionOne;
+
+            p1Cursor.transform.position = startPosCursorTwo;
+            p2Cursor.transform.position = startPosCursorOne;
         }
         else
         {
             //From the opposite side to their original starting positions.
             playerOne.transform.position = startPositionOne;
             playerTwo.transform.position = startPositionTwo;
+
+            p1Cursor.transform.position = startPosCursorOne;
+            p2Cursor.transform.position = startPosCursorTwo;
         }
         platformManager.SwapTints(positionsGetSwapped);
 
@@ -348,8 +356,8 @@ public class SceneManager : MonoBehaviour {
         p2Cursor.GetComponent<SpriteRenderer>().color = Color.red;
 
         //Set their position to the players plus ten
-        p1Cursor.transform.position = new Vector3(playerOne.transform.position.x, playerOne.transform.position.y + 10, 0);
-        p2Cursor.transform.position = new Vector3(playerTwo.transform.position.x, playerTwo.transform.position.y + 10, 0);
+        p1Cursor.transform.position = startPosCursorOne;
+        p2Cursor.transform.position = startPosCursorTwo;
 
         //Control with Joy stick
         p1Cursor.GetComponent<ControlWithJoystick>().controllerNum = 1;
@@ -368,10 +376,8 @@ public class SceneManager : MonoBehaviour {
         //reactivate the cursors
         p1Cursor.SetActive(true);
         p2Cursor.SetActive(true);
-
-        //Set their position to the players plus ten
-        p1Cursor.transform.position = new Vector3(playerOne.transform.position.x, playerOne.transform.position.y + 10, 0);
-        p2Cursor.transform.position = new Vector3(playerTwo.transform.position.x, playerTwo.transform.position.y + 10, 0);
+        p1Cursor.GetComponent<ControlWithJoystick>().enabled = false;
+        p2Cursor.GetComponent<ControlWithJoystick>().enabled = false;
 
         //Players become disabled
         playerOne.GetComponent<Player>().enabled = false;
