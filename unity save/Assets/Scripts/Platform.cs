@@ -6,6 +6,7 @@ public class Platform : MonoBehaviour {
     [SerializeField] private float range;
     [SerializeField] private float velocity = 0.1f;
     private float posInRange;
+    private bool isMoving = false;
 
     Vector3 position;
 
@@ -15,8 +16,6 @@ public class Platform : MonoBehaviour {
         //starts platform at random point in it's range to combat uniformity in movement
         posInRange = Random.Range(-range / 2, range / 2);
         position = transform.position;
-        position.x += posInRange;
-        transform.position = position;
 	}
 
     // Update is called once per frame
@@ -27,10 +26,13 @@ public class Platform : MonoBehaviour {
             velocity *= -1;
         }
 
-        position.x += velocity;
-        posInRange += velocity;
+        if (isMoving)
+        {
+            position.x += velocity;
+            posInRange += velocity;
 
-        transform.position = position;
+            transform.position = position;
+        }
     }
 
     public void Rotate()
