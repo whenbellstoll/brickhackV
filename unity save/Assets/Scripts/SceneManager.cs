@@ -49,6 +49,7 @@ public class SceneManager : MonoBehaviour {
     [SerializeField] private Digit[] timerDigits;
 
     [SerializeField] private GameObject winText;
+    [SerializeField] private GameObject winTint;
 
     private float timer;
 
@@ -163,6 +164,8 @@ public class SceneManager : MonoBehaviour {
 
         //Get rid of the red/blue wins
         winText.GetComponent<SpriteRenderer>().enabled = false;
+        winTint.GetComponent<SpriteRenderer>().enabled = false;
+
         //set the timer to the build time
         timer = buildTime;
 
@@ -501,17 +504,21 @@ public class SceneManager : MonoBehaviour {
         state = GameState.win;
         timer = winTime;
         winText.GetComponent<SpriteRenderer>().enabled = true;
+        winTint.GetComponent<SpriteRenderer>().enabled = true;
         if(playerOne.GetComponent<Player>().currentHealth <= 0)
         {
             winAnnoucer.clip = audioClips[7];
             winAnnoucer.Play(44100);
             winText.GetComponent<SpriteRenderer>().sprite = winRed;
+            winTint.GetComponent<SpriteRenderer>().color = new Color(190f / 255f, 38f / 255f, 51f / 255f , 100f / 255f);
         }
         else
         {
             winAnnoucer.clip = audioClips[6];
             winAnnoucer.Play(44100);
             winText.GetComponent<SpriteRenderer>().sprite = winBlue;
+            winTint.GetComponent<SpriteRenderer>().color = new Color(38f / 255f, 179f / 255f, 190f / 255f, 100f / 255f);
+
         }
     }
 
