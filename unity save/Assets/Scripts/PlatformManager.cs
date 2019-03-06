@@ -10,8 +10,8 @@ public class PlatformManager : MonoBehaviour {
 
     [SerializeField] public List<GameObject> spikedBuildables;
 
-    [SerializeField] private GameObject tintP1;
-    [SerializeField] private GameObject tintP2;
+    [SerializeField] public GameObject tintP1;
+    [SerializeField] public GameObject tintP2;
     private Vector3 tintPosLeft = new Vector3(-10, -1, -1);
     private Vector3 tintPosRight = new Vector3(10, -1, -1);
 
@@ -188,7 +188,6 @@ public class PlatformManager : MonoBehaviour {
 
     public void HandlePlacing(GameObject p1Cursor, GameObject p2Cursor, float delayTimer)
     {
-
         //TODO: I hate that this code is just repeated and I know it can be fixed but I'm not gonna do it right now
         if (Input.GetKeyDown("joystick 1 button 0") || Input.GetKeyDown(KeyCode.F))
         {

@@ -201,8 +201,12 @@ public class SceneManager : MonoBehaviour {
                 HandleSelectionChanging();
 
                 platformManager.HandlePlacing(p1Cursor, p2Cursor, delayTimer);
+
+                SetCycleStates(itemIndex[0], 1, !platformManager.tintP1.GetComponent<SpriteRenderer>().enabled);
+                SetCycleStates(itemIndex[1], 2, !platformManager.tintP1.GetComponent<SpriteRenderer>().enabled);
+
                 //TODO: this is a workaround to SceneManager-being-overloaded issues. SetCycleStates should eventually be in platform manager
-                if(p1Cursor.GetComponent<StoreObjectToBuild>().obj == null)
+                if (p1Cursor.GetComponent<StoreObjectToBuild>().obj == null)
                 {
                     SetCycleStates(1);
                 }
@@ -413,7 +417,7 @@ public class SceneManager : MonoBehaviour {
     /// </summary>
     /// <param name="itemIndex">selected item index</param>
     /// <param name="player">player num (1/2)</param>
-    private void SetCycleStates(int itemIndex, int player)
+    private void SetCycleStates(int itemIndex, int player, bool selected = false)
     {
         List<GameObject> itemCycle = player == 1 ? playerOneItemCycle : playerTwoItemCycle;
         GameObject cursor = player == 1 ? p1Cursor : p2Cursor;
@@ -421,7 +425,7 @@ public class SceneManager : MonoBehaviour {
         for (int i = 0; i < itemCycle.Count; i++)
         {
             //previous item
-            if (i == (itemIndex - 1 + itemCycle.Count) % itemCycle.Count)
+            if (i == (itemIndex - 1 + itemCycle.Count) % itemCycle.Count && !selected)
             {
                 itemCycle[i].SetActive(true);
                 itemCycle[i].transform.position = cursor.transform.position + (Vector3.up * 2.5f);
@@ -437,7 +441,7 @@ public class SceneManager : MonoBehaviour {
                 continue;
             }
             //next item
-            if (i == (itemIndex + 1) % itemCycle.Count)
+            if (i == (itemIndex + 1) % itemCycle.Count && !selected)
             {
                 itemCycle[i].SetActive(true);
                 itemCycle[i].transform.position = cursor.transform.position - (Vector3.up * 2.5f);
@@ -459,7 +463,6 @@ public class SceneManager : MonoBehaviour {
         {
             obj.SetActive(false);
         }
-
     }
 
 
