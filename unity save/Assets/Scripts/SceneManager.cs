@@ -244,6 +244,9 @@ public class SceneManager : MonoBehaviour {
                         //After round ten keep incrementing the time each and every round
                         roundTime++;
                     }
+
+                    if (roundNumber == 2) { Spiked = true; }
+
                     timer = roundTime;
                     BeginSurvivalPhase();
                 }
