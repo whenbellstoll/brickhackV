@@ -245,7 +245,7 @@ public class SceneManager : MonoBehaviour {
                         roundTime++;
                     }
 
-                    if (roundNumber == 2) { Spiked = true; }
+                    if (roundNumber == 5) { Spiked = true; }
 
                     timer = roundTime;
                     BeginSurvivalPhase();

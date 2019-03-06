@@ -4263,7 +4263,9 @@ MonoBehaviour:
   - {fileID: 1516468355454526, guid: bc9bf1edc28418940a68faec17388465, type: 2}
   - {fileID: 1689680402475142, guid: 33ecbc85b33f30947bc55724414fd1bc, type: 2}
   - {fileID: 1187550484189648, guid: a2b5bcf0ff2fcce4e8d600766a7dedd8, type: 2}
-  spikedBuildables: []
+  spikedBuildables:
+  - {fileID: 1735317703540468, guid: 842f8768a0c5178478b573d832cee908, type: 2}
+  - {fileID: 1003155653346834, guid: fbfe0da0acd0e7b41946887601f10b01, type: 2}
   tintP1: {fileID: 1121456433}
   tintP2: {fileID: 456581128}
   safeAreaLeft:
