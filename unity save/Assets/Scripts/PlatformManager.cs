@@ -300,7 +300,6 @@ public class PlatformManager : MonoBehaviour {
     {
         foreach (GameObject platform in platforms)
         {
-            Debug.Log(platform.name);
             platform.GetComponent<Platform>().SetMoving(b);
         }
     }
