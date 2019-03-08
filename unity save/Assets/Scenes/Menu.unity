@@ -1061,7 +1061,7 @@ MonoBehaviour:
   menuButtons:
   - transform: {fileID: 1388758303}
     render: {fileID: 1388758302}
-    sceneChange: DaneTest
+    sceneChange: Game_Backup
     works: 1
   - transform: {fileID: 255318796}
     render: {fileID: 255318795}
