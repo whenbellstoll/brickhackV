@@ -74,6 +74,8 @@ public class PlatformManager : MonoBehaviour {
         platforms.Add(Instantiate(buildables[1], new Vector3(18.5f, -11, 0), Quaternion.identity));
         platforms.Add(Instantiate(buildables[1], new Vector3(2.5f, -6, 0), Quaternion.identity));
         traps.Add(Instantiate(buildables[3], new Vector3(2, -12, 0), Quaternion.identity));
+        traps[1].GetComponent<ArrowFire>().RotateArrow();
+        traps[1].GetComponent<ArrowFire>().RotateArrow();
     }
 
     /// <summary>
@@ -205,7 +207,6 @@ public class PlatformManager : MonoBehaviour {
                 {
                     tintP1.GetComponent<SpriteRenderer>().enabled = false;
                     p1Cursor.GetComponent<ControlWithJoystick>().enabled = true;
-                    p2Cursor.GetComponent<ControlWithJoystick>().enabled = true;
                 }
             }
             //if player 1 has an object
@@ -227,6 +228,7 @@ public class PlatformManager : MonoBehaviour {
                 if (delayTimer <= 0)
                 {
                     tintP2.GetComponent<SpriteRenderer>().enabled = false;
+                    p2Cursor.GetComponent<ControlWithJoystick>().enabled = true;
                 }
             }
             //if player 2 has an object
@@ -300,6 +302,7 @@ public class PlatformManager : MonoBehaviour {
     {
         foreach (GameObject platform in platforms)
         {
+            Debug.Log(platform);
             platform.GetComponent<Platform>().SetMoving(b);
         }
     }

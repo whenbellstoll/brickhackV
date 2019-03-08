@@ -457,6 +457,17 @@ public class SceneManager : MonoBehaviour {
             }
             itemCycle[i].SetActive(false);
         }
+
+        if (selected)
+        {
+            for(int i = 0; i < itemCycle.Count; i++)
+            {
+                if(i != itemIndex)
+                {
+                    itemCycle[i].SetActive(false);
+                }
+            }
+        }
     }
 
     /// <summary>
