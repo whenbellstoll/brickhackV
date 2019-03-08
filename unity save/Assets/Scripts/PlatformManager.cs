@@ -131,7 +131,7 @@ public class PlatformManager : MonoBehaviour {
     /// </summary>
     public void HandlePlayerTrapCollisions(GameObject playerOne, GameObject playerTwo, GameState state)
     {
-        if (state == GameState.survival)
+        if (state == GameState.survival && playerOne.GetComponent<Player>().enabled && playerTwo.GetComponent<Player>().enabled)
         {
             foreach (GameObject trap in traps)
             {

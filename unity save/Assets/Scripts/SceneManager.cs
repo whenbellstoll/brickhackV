@@ -328,8 +328,11 @@ public class SceneManager : MonoBehaviour {
         if (positionsGetSwapped)
         {
             //Swap players to the other side
-            playerOne.transform.position = startPositionTwo;
-            playerTwo.transform.position = startPositionOne;
+            playerOne.GetComponent<LerpDeDerp>().SetTarget(startPositionTwo);
+            playerTwo.GetComponent<LerpDeDerp>().SetTarget(startPositionOne);
+
+            //playerOne.transform.position = startPositionTwo;
+            //playerTwo.transform.position = startPositionOne;
 
             p1Cursor.transform.position = startPosCursorTwo;
             p2Cursor.transform.position = startPosCursorOne;
@@ -337,8 +340,12 @@ public class SceneManager : MonoBehaviour {
         else
         {
             //From the opposite side to their original starting positions.
-            playerOne.transform.position = startPositionOne;
-            playerTwo.transform.position = startPositionTwo;
+
+            playerOne.GetComponent<LerpDeDerp>().SetTarget(startPositionOne);
+            playerTwo.GetComponent<LerpDeDerp>().SetTarget(startPositionTwo);
+
+            //playerOne.transform.position = startPositionOne;
+            //playerTwo.transform.position = startPositionTwo;
 
             p1Cursor.transform.position = startPosCursorOne;
             p2Cursor.transform.position = startPosCursorTwo;
@@ -492,8 +499,8 @@ public class SceneManager : MonoBehaviour {
         p2Cursor.SetActive(false);
 
         //enable the players
-        playerOne.GetComponent<Player>().enabled = true;
-        playerTwo.GetComponent<Player>().enabled = true;
+        //playerOne.GetComponent<Player>().enabled = true;
+        //playerTwo.GetComponent<Player>().enabled = true;
 
         //Swaps the players
         SetPlayers();
