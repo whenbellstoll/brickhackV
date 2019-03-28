@@ -26,7 +26,7 @@ GameObject:
   - component: {fileID: 114953774441997326}
   m_Layer: 8
   m_Name: TrapArrow
-  m_TagString: Platform
+  m_TagString: Trap
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

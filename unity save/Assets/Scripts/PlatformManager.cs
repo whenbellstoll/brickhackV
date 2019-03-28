@@ -64,14 +64,14 @@ public class PlatformManager : MonoBehaviour {
     public void LoadInitialLevel()
     {
         //left side
-        platforms.Add(Instantiate(buildables[0], new Vector3(-16.5f,  -9, 0), Quaternion.identity));
-        platforms.Add(Instantiate(buildables[1], new Vector3(-18.5f, -11, 0), Quaternion.identity));
+        platforms.Add(Instantiate(buildables[0], new Vector3(-16.5f,  -9.5f, 0), Quaternion.identity));
+        platforms.Add(Instantiate(buildables[1], new Vector3(-17.5f, -11.5f, 0), Quaternion.identity));
         platforms.Add(Instantiate(buildables[1], new Vector3(-2.5f, -6, 0), Quaternion.identity));
         traps.Add(Instantiate(buildables[3], new Vector3(-2, -12, 0), Quaternion.identity));
 
         //right side
-        platforms.Add(Instantiate(buildables[0], new Vector3(16.5f, -9, 0), Quaternion.identity));
-        platforms.Add(Instantiate(buildables[1], new Vector3(18.5f, -11, 0), Quaternion.identity));
+        platforms.Add(Instantiate(buildables[0], new Vector3(16.5f, -9.5f, 0), Quaternion.identity));
+        platforms.Add(Instantiate(buildables[1], new Vector3(17.5f, -11.5f, 0), Quaternion.identity));
         platforms.Add(Instantiate(buildables[1], new Vector3(2.5f, -6, 0), Quaternion.identity));
         traps.Add(Instantiate(buildables[3], new Vector3(2, -12, 0), Quaternion.identity));
         traps[1].GetComponent<ArrowFire>().RotateArrow();
@@ -84,23 +84,31 @@ public class PlatformManager : MonoBehaviour {
     /// <param name="cursor"></param>
     public void PlaceObject(GameObject cursor)
     {
+        StoreObjectToBuild sob = cursor.GetComponent<StoreObjectToBuild>();
         //TODO: placement made a sound before I ripped it out of SceneManager. Shouldn't be a hard fix but it's very low priority
-        GameObject objToBuild = cursor.GetComponent<StoreObjectToBuild>().obj;
-
-        if (!IsInSafeArea(objToBuild.GetComponent<BoxCollider2D>().bounds))
+        if (!IsInSafeArea(sob.obj.GetComponent<BoxCollider2D>().bounds))
         {
             //if the object is a platform add it to platforms, if it's a trap add it to traps. 
-            if (cursor.GetComponent<StoreObjectToBuild>().obj.tag == "Platform")
+            if (sob.obj.tag == "Platform")
             {
-                //cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
-                platforms.Add(Instantiate(objToBuild, objToBuild.transform.position, objToBuild.transform.rotation));
-                cursor.GetComponent<StoreObjectToBuild>().obj = null;
+                if (!sob.editing)
+                {
+                    Debug.Log(sob.obj.name);
+                    //cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
+                    platforms.Add(Instantiate(sob.obj, sob.obj.transform.position, sob.obj.transform.rotation));
+                    sob.editing = true;
+                }
+                sob.obj = null;
             }
             else
             {
-                //cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
-                traps.Add(Instantiate(objToBuild, objToBuild.transform.position, objToBuild.transform.rotation));
-                cursor.GetComponent<StoreObjectToBuild>().obj = null;
+                if (!sob.editing)
+                {
+                    //cursor.GetComponent<StoreObjectToBuild>().obj.transform.parent = null;
+                    traps.Add(Instantiate(sob.obj, sob.obj.transform.position, sob.obj.transform.rotation));
+                    sob.editing = true;
+                }
+                sob.obj = null;
             }
         }
     }
@@ -302,8 +310,10 @@ public class PlatformManager : MonoBehaviour {
     {
         foreach (GameObject platform in platforms)
         {
-            Debug.Log(platform);
-            platform.GetComponent<Platform>().SetMoving(b);
+            if (platform.GetComponent<Platform>())
+            {
+                platform.GetComponent<Platform>().SetMoving(b);
+            }           
         }
     }
 }

@@ -6,6 +6,8 @@ public class StoreObjectToBuild : MonoBehaviour {
 
     public GameObject obj;
 
+    public bool editing = false;
+
 	// Use this for initialization
 	void Start () {
 		

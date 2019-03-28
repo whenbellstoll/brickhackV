@@ -206,11 +206,11 @@ public class SceneManager : MonoBehaviour {
                 SetCycleStates(itemIndex[1], 2, !platformManager.tintP1.GetComponent<SpriteRenderer>().enabled);
 
                 //TODO: this is a workaround to SceneManager-being-overloaded issues. SetCycleStates should eventually be in platform manager
-                if (p1Cursor.GetComponent<StoreObjectToBuild>().obj == null)
+                if (p1Cursor.GetComponent<StoreObjectToBuild>().obj == null || p1Cursor.GetComponent<StoreObjectToBuild>().editing)
                 {
                     SetCycleStates(1);
                 }
-                if (p2Cursor.GetComponent<StoreObjectToBuild>().obj == null)
+                if (p2Cursor.GetComponent<StoreObjectToBuild>().obj == null || p2Cursor.GetComponent<StoreObjectToBuild>().editing)
                 {
                     SetCycleStates(2);
                 }
@@ -396,6 +396,10 @@ public class SceneManager : MonoBehaviour {
         p1Cursor.GetComponent<ControlWithJoystick>().enabled = false;
         p2Cursor.GetComponent<ControlWithJoystick>().enabled = false;
 
+        //reset the cursor editing propertry
+        p1Cursor.GetComponent<StoreObjectToBuild>().editing = false;
+        p2Cursor.GetComponent<StoreObjectToBuild>().editing = false;
+
         //Players become disabled
         playerOne.GetComponent<Player>().enabled = false;
         playerTwo.GetComponent<Player>().enabled = false;
@@ -565,7 +569,7 @@ public class SceneManager : MonoBehaviour {
     public void HandleSelectionChanging()
     {
         //Next four ifs change the prefab the players select.
-        if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null) //Gross, dispicable flag check, but nonetheless necessary
+        if (p1Cursor.GetComponent<StoreObjectToBuild>().obj != null && !p1Cursor.GetComponent<StoreObjectToBuild>().editing) //Gross, dispicable flag check, but nonetheless necessary
         {
             if (Input.GetKeyDown("joystick 1 button 4") || Input.GetKeyDown(KeyCode.Q))
             {
@@ -599,9 +603,10 @@ public class SceneManager : MonoBehaviour {
 
                 p1Cursor.GetComponent<StoreObjectToBuild>().obj = playerOneItemCycle[itemIndex[0]];
             }
-
-            //Copy of the above code, just for the second player
-            if (Input.GetKeyDown("joystick 2 button 4") || Input.GetKeyDown(KeyCode.RightControl))
+        }
+        if (p2Cursor.GetComponent<StoreObjectToBuild>().obj != null && !p2Cursor.GetComponent<StoreObjectToBuild>().editing) { 
+                //Copy of the above code, just for the second player
+                if (Input.GetKeyDown("joystick 2 button 4") || Input.GetKeyDown(KeyCode.RightControl))
             {
                 itemIndex[1]--;
                 if (itemIndex[1] < 0)
