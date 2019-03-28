@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 114632757153975200}
   - component: {fileID: 95523142347423338}
   - component: {fileID: 61273899713288476}
+  - component: {fileID: 114953774441997326}
   m_Layer: 8
   m_Name: TrapArrow
   m_TagString: Platform
@@ -99,6 +100,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ArrowPrefab: {fileID: 1346631065312414, guid: dd9eb6d564e112f4ca14b8ec1bb0aab7,
     type: 2}
+--- !u!114 &114953774441997326
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1689680402475142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa1a44f41620f37459a85080904146bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  range: 0
+  velocity: 0.1
 --- !u!212 &212382617390834344
 SpriteRenderer:
   m_ObjectHideFlags: 1
